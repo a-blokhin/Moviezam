@@ -4,8 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Moroz/AndroidStudioProjects/1/Moviezam/app/src/main/res/drawable/artist_background.xml" value="0.1" />
+        <entry key="..\:/Users/Moroz/AndroidStudioProjects/1/Moviezam/app/src/main/res/drawable/icon.xml" value="0.11354166666666667" />
         <entry key="..\:/Users/Moroz/AndroidStudioProjects/1/Moviezam/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/Moroz/AndroidStudioProjects/1/Moviezam/app/src/main/res/layout/fragment_artist.xml" value="0.1" />
+        <entry key="..\:/Users/Moroz/AndroidStudioProjects/1/Moviezam/app/src/main/res/layout/fragment_artist.xml" value="0.19294117647058823" />
         <entry key="..\:/Users/Moroz/AndroidStudioProjects/1/Moviezam/app/src/main/res/layout/item_song.xml" value="0.1" />
       </map>
     </option>

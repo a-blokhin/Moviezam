@@ -44,6 +44,10 @@
                 android:padding="10dp"
                 />
 
+
+
+
+
             <TextView
                 android:fontFamily="@font/montserrat_medium"
                 android:id="@+id/artist_const_songs"
