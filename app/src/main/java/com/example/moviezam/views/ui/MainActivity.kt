@@ -18,15 +18,14 @@ import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppCompatActivity() {
-
     lateinit var binding: ActivityMainBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fresco.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val recyclerView = findViewById<RecyclerView>(com.example.moviezam.R.id.userList)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(
@@ -36,26 +35,8 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        var user : List<SongCard> = emptyList()
-
-        runBlocking {
-            withContext(Dispatchers.IO) {
-                user = listOf(
-                    SongRepository().getSongById(227934),
-                    SongRepository().getSongById(227935),
-                    SongRepository().getSongById(227936),
-                    SongRepository().getSongById(227937),
-                    SongRepository().getSongById(227938),
-                    SongRepository().getSongById(227939),
-                    SongRepository().getSongById(227940),
-                    SongRepository().getSongById(227941),
-                    SongRepository().getSongById(227942),
-                    SongRepository().getSongById(227943))
-            }
-        }
-
+        val user = setDefaultSongs()
         val userAdapter = SongCardAdapter(user)
-
         binding.userList.adapter = userAdapter;
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -73,5 +54,25 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+    }
+
+    private fun setDefaultSongs() : List<SongCard> {
+        var defaultSongs = emptyList<SongCard>()
+        runBlocking {
+            withContext(Dispatchers.IO) {
+                defaultSongs = listOf(
+                    SongRepository().getSongById(227934),
+                    SongRepository().getSongById(227935),
+                    SongRepository().getSongById(227936),
+                    SongRepository().getSongById(227937),
+                    SongRepository().getSongById(227938),
+                    SongRepository().getSongById(227939),
+                    SongRepository().getSongById(227940),
+                    SongRepository().getSongById(227941),
+                    SongRepository().getSongById(227942),
+                    SongRepository().getSongById(227943))
+            }
+        }
+        return defaultSongs
     }
 }
