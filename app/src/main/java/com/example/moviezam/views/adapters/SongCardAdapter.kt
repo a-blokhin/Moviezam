@@ -11,6 +11,7 @@ import com.example.moviezam.repository.SongRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.IllegalStateException
 
 class SongCardAdapter(private var songs: List<SongCard> = emptyList()) : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>(), Filterable {
     private var songCardFilterList = emptyList<SongCard>()
@@ -53,20 +54,25 @@ class SongCardAdapter(private var songs: List<SongCard> = emptyList()) : Recycle
                 songCardFilterList = if (charSearch.isEmpty()) {
                     songs
                 } else {
-                    val resultList = emptyList<SongCard>().toMutableList()
-                    runBlocking {
-                        withContext(Dispatchers.IO) {
-                            //TODO: fix problem with loading all pages
-                            var pageNum = 1
-                            val maxPageNum = 2
-                            var pageResults = SongRepository().getSongsByName(charSearch, pageNum)
-                            while (pageResults.isNotEmpty() && pageNum <= maxPageNum) {
-                                resultList += pageResults
-                                pageResults = SongRepository().getSongsByName(charSearch, pageNum)
-                                pageNum++
+                    try {
+                        val resultList = emptyList<SongCard>().toMutableList()
+                        runBlocking {
+                            withContext(Dispatchers.IO) {
+                                //TODO: fix problem with loading all pages
+                                var pageNum = 1
+                                val maxPageNum = 10
+                                var pageResults = SongRepository().getSongsByName(charSearch, pageNum)
+                                while (pageResults.isNotEmpty() && pageNum <= maxPageNum) {
+                                    resultList += pageResults
+                                    pageResults = SongRepository().getSongsByName(charSearch, pageNum)
+                                    pageNum++
+                                }
                             }
+                            resultList
                         }
-                        resultList
+                    }
+                    catch (e : Exception) {
+                        emptyList<SongCard>().toMutableList()
                     }
                 }
                 val filterResults = FilterResults()

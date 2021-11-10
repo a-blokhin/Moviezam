@@ -41,13 +41,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    userAdapter.filter.filter(query)
+                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    userAdapter.filter.filter(newText)
-                }
                 return false
             }
 
