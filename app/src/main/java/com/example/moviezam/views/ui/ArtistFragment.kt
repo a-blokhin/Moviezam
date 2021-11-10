@@ -17,6 +17,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.content.Intent
+import android.net.Uri
+
 
 class ArtistFragment : Fragment() {
     private var _binding: FragmentArtistBinding? = null
@@ -34,7 +37,7 @@ class ArtistFragment : Fragment() {
 
         if (bundle != null) {
             lifecycleScope.launch {
-                artist = async {viewModel.loadArtist(bundle.getInt("id"))}.await()
+                artist = async { viewModel.loadArtist(bundle.getInt("id")) }.await()
                 setUpBasic()
             }
 
@@ -54,20 +57,82 @@ class ArtistFragment : Fragment() {
         savedInstanceState.putString("artist", json)
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
         binding.songs.layoutManager = LinearLayoutManager(this.context)
 
         return binding.root
     }
 
-    fun setUpBasic()  {
+    fun setUpBasic() {
         binding.image.setImageURI(artist?.image)
-        binding.artistName.text = artist?.name
-        adapter = SongCardAdapter(artist!!.songs)
-        binding.songs.adapter = adapter
+        if (artist != null) {
+
+            binding.artistName.text = artist?.name
+            adapter = SongCardAdapter(artist!!.songs)
+            binding.songs.adapter = adapter
+
+            if (artist!!.urlOfficial != "") {
+                binding.official.setOnClickListener {
+                    goToUrl(artist!!.urlOfficial)
+                }
+            } else {
+                binding.official.visibility = View.GONE
+            }
+
+            if (artist!!.urlAppleMusic != "") {
+                binding.appleMusic.setOnClickListener {
+                    goToUrl(artist!!.urlAppleMusic)
+                }
+            }else {
+                binding.appleMusic.visibility = View.GONE
+            }
+
+            if (artist!!.urlSpotify != "") {
+                binding.spotify.setOnClickListener {
+                    goToUrl(artist!!.urlSpotify)
+                }
+            }else {
+                binding.spotify.visibility = View.GONE
+            }
+
+            if (artist!!.urlItunes != "") {
+                binding.itunes.setOnClickListener {
+                    goToUrl(artist!!.urlItunes)
+                }
+            } else {
+                binding.itunes.visibility = View.GONE
+            }
+
+            if (artist!!.urlAmazon != "") {
+                binding.amazon.setOnClickListener {
+                    goToUrl(artist!!.urlAmazon)
+                }
+            } else {
+                binding.amazon.visibility = View.GONE
+            }
+
+            if (artist!!.urlWikipedia != "") {
+                binding.wikipedia.setOnClickListener {
+                    goToUrl(artist!!.urlWikipedia)
+                }
+            } else {
+                binding.wikipedia.visibility = View.GONE
+            }
+        }
+
+
+    }
+
+
+    private fun goToUrl(url: String) {
+        val uriUrl: Uri = Uri.parse(url)
+        val launchBrowser = Intent(Intent.ACTION_VIEW, uriUrl)
+        startActivity(launchBrowser)
     }
 
     override fun onDestroyView() {
