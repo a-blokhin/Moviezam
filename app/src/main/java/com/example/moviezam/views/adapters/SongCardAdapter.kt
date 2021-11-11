@@ -9,6 +9,7 @@ import com.example.moviezam.databinding.ItemSongBinding
 import com.example.moviezam.models.SongCard
 import com.example.moviezam.repository.SongRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.lang.IllegalStateException
@@ -60,7 +61,7 @@ class SongCardAdapter(private var songs: List<SongCard> = emptyList()) : Recycle
                             withContext(Dispatchers.IO) {
                                 //TODO: fix problem with loading all pages
                                 var pageNum = 1
-                                val maxPageNum = 10
+                                val maxPageNum = 2
                                 var pageResults = SongRepository().getSongsByName(charSearch, pageNum)
                                 while (pageResults.isNotEmpty() && pageNum <= maxPageNum) {
                                     resultList += pageResults
