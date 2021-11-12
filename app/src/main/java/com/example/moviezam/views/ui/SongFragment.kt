@@ -65,11 +65,17 @@ class SongFragment : Fragment() {
     }
 
     fun setUpBasic()  {
-//        binding.songImg.setImageURI(song?.image)
+        binding.songImg.setImageURI(song?.externalArtUrl)
         binding.songTitle.text = song?.name
         binding.songDesc.text = song?.artist.plus(" - ").plus(song?.albumName)
-        filmAdapter = FilmCardAdapter(song!!.films)
-        binding.films.adapter = filmAdapter
+
+        if (song!!.films != null) {
+            filmAdapter = FilmCardAdapter(song!!.films)
+            binding.films.adapter = filmAdapter
+        } else {
+            binding.films.visibility = View.GONE
+            binding.filmsSection.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {

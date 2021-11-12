@@ -14,14 +14,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val f: Fragment = FilmFragment()
+        val f: Fragment = SongFragment()
         val bundle = Bundle()
-        bundle.putInt("id", 7130)
+        bundle.putInt("id", 1111)
         f.arguments = bundle
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, f, "ARTIST")
+                .replace(R.id.container, f, "SONG")
                 .commitAllowingStateLoss()
         }
     }

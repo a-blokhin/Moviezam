@@ -1,7 +1,9 @@
 package com.example.moviezam.views.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.databinding.ItemArtistBinding
 import com.example.moviezam.databinding.ItemFilmBinding
@@ -9,6 +11,8 @@ import com.example.moviezam.databinding.ItemSongBinding
 import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.models.FilmCard
 import com.example.moviezam.models.SongCard
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class FilmCardAdapter(private val films: List<FilmCard>) : RecyclerView.Adapter<FilmCardAdapter.FilmCardViewHolder>() {
 
@@ -26,9 +30,14 @@ class FilmCardAdapter(private val films: List<FilmCard>) : RecyclerView.Adapter<
     class FilmCardViewHolder(
         private val binding: ItemFilmBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(film: FilmCard) {
             binding.title.text = film.name
-            binding.desc.text = film.releaseDate
+
+            val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
+            binding.desc.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
+
             binding.image.setImageURI(film.image)
         }
     }
