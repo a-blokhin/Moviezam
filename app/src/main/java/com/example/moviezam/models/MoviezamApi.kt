@@ -10,4 +10,14 @@ interface MoviezamApi {
     fun getArtistById(
         @Query("id") id: Int
     ): Call<Artist>
+
+    @GET("/film")
+    fun getFilmById(
+        @Query("id") id: Int
+    ): Call<Film>
+
+    @GET("/song")
+    fun getSongById(
+        @Query("id") id: Int
+    ): Call<Song>
 }

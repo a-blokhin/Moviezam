@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val f: Fragment = ArtistFragment()
+        val f: Fragment = FilmFragment()
         val bundle = Bundle()
         bundle.putInt("id", 7130)
         f.arguments = bundle
