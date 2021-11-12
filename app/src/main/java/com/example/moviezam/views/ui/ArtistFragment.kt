@@ -25,6 +25,7 @@ class ArtistFragment : Fragment() {
     private var _binding: FragmentArtistBinding? = null
     private val viewModel = ArtistViewModel()
     private var artist: Artist? = null
+    private var bundle: Bundle? = null
 
     private var adapter: SongCardAdapter? = null
 
@@ -32,12 +33,17 @@ class ArtistFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val bundle = this.arguments
+        bundle = this.arguments
 
+    }
 
-        if (bundle != null) {
+    override fun onStart() {
+        super.onStart()
+        //binding.progressBar.visibility = View.VISIBLE
+        if ((bundle != null) && (bundle!!.getInt("id") != 0)) {
+
             lifecycleScope.launch {
-                artist = async { viewModel.loadArtist(bundle.getInt("id")) }.await()
+                artist = async { viewModel.loadArtist(bundle!!.getInt("id")) }.await()
                 setUpBasic()
             }
 
@@ -47,8 +53,9 @@ class ArtistFragment : Fragment() {
             artist = gson.fromJson(json, Artist::class.java)
             setUpBasic()
         }
-
+        //binding.progressBar.visibility = View.GONE
     }
+
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -61,12 +68,14 @@ class ArtistFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
         binding.songs.layoutManager = LinearLayoutManager(this.context)
 
         return binding.root
     }
+
+
 
     fun setUpBasic() {
         binding.image.setImageURI(artist?.image)
