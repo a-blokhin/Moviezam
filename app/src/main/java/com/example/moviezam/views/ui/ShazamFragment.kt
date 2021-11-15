@@ -31,6 +31,10 @@ import org.json.JSONObject
 import com.google.gson.JsonObject
 
 import com.google.gson.Gson
+import com.google.gson.JsonParser
+
+
+
 
 
 
@@ -94,21 +98,37 @@ class ShazamFragment : Fragment()  {
                         song_name = withContext(Dispatchers.Default) {
                             return@withContext viewModel.findSong(output.toString(), dir.toString())
                         }
-                        val gson = Gson()
-                        val convertedObject = gson.fromJson(song_name, JsonObject::class.java)
-                        if (convertedObject["matches"].toString().length > 2) {
+                        val parser = JsonParser()
+                        val convertedObject = parser.parse(song_name).asJsonObject
+                        if (convertedObject.get("matches").toString().length > 2) {
                             Toast.makeText(
-                                getActivity(),
-                                gson.fromJson(
-                                    convertedObject["track"].toString(),
-                                    JsonObject::class.java
-                                )["title"].toString(), Toast.LENGTH_LONG
+                                getActivity(),convertedObject.getAsJsonObject("track")["title"].asString, Toast.LENGTH_LONG
                             ).show()
+
+                            val songJson = parser.parse("{}").asJsonObject
+                            songJson.addProperty("id", -1)
+                            songJson.addProperty(
+                                "name", convertedObject.getAsJsonObject("track")["title"].asString
+                            )
+                            songJson.addProperty(
+                                "name_stub", convertedObject.getAsJsonObject("track")["title"].asString
+                            )
+                            songJson.addProperty(
+                                "artist", convertedObject.getAsJsonObject("track")["subtitle"].asString
+                            )
+                            songJson.addProperty("album_name", "")
+                            songJson.addProperty(
+                                "external_art_url", convertedObject.getAsJsonObject("track")
+                                    .getAsJsonObject("images")["background"].asString
+                            )
+                            songJson.addProperty("amazon", "")
+                            songJson.addProperty("apple_music", "")
+                            songJson.addProperty("itunes", "")
+                            songJson.addProperty("spotify", "")
+                            songJson.addProperty("youtube", "")
+                            songJson.addProperty("films", "")// надо сделать List<FilmCard>
                             Log.d(
-                                "MediaRecorderder", gson.fromJson(
-                                    convertedObject["track"].toString(),
-                                    JsonObject::class.java
-                                )["title"].toString()
+                                "MediaRecorderder", convertedObject.getAsJsonObject("track")["title"].asString
                             )
                         } else {
                             Toast.makeText(getActivity(), "Песня не нашлась", Toast.LENGTH_LONG)
