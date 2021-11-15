@@ -33,12 +33,12 @@ class FilmCardAdapter(private val films: List<FilmCard>) : RecyclerView.Adapter<
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(film: FilmCard) {
-            binding.title.text = film.name
+            binding.filmName.text = film.name
 
             val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-            binding.desc.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
+            binding.releaseDate.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
 
-            binding.image.setImageURI(film.image)
+            binding.avatarImage.setImageURI(film.image)
         }
     }
 

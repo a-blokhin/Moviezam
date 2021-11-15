@@ -25,8 +25,8 @@ class ArtistCardAdapter(private val artists: List<ArtistCard>) : RecyclerView.Ad
         private val binding: ItemArtistBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(artist: ArtistCard) {
-            binding.title.text = artist.name
-            binding.image.setImageURI(artist.image)
+            binding.artistName.text = artist.name
+            binding.avatarImage.setImageURI(artist.image)
         }
     }
 

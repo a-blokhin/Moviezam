@@ -23,8 +23,9 @@ class SongCardAdapter(private val songs: List<SongCard>) : RecyclerView.Adapter<
         private val binding: ItemSongBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(song: SongCard) {
-            binding.text.text = song.name
-            binding.image.setImageURI(song.image)
+            binding.songName.text = song.name
+            binding.artistName.text = song.artist
+            binding.avatarImage.setImageURI(song.image)
         }
     }
 

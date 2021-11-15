@@ -35,6 +35,11 @@ class SongFragment : Fragment() {
 
         if (bundle != null) {
             lifecycleScope.launch {
+
+//                val gson = Gson()
+//                val json = bundle?.get("song").toString()
+//                song = gson.fromJson(json, Song::class.java)
+
                 song = async {viewModel.loadSong(bundle.getInt("id"))}.await()
                 setUpBasic()
             }
