@@ -5,6 +5,7 @@ import com.example.moviezam.models.MoviezamApi
 import com.example.moviezam.models.SongCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -21,8 +22,9 @@ class SongRepository {
             ?: error("Not found song")
     }
 
-    suspend fun getSongsByName(name: String, pageNum: Int): List<SongCard> = withContext(Dispatchers.IO) {
+
+    suspend fun getSongsPageByName(name: String, pageNum: Int): List<SongCard> = withContext(Dispatchers.IO) {
         return@withContext moviezamApi.getSongsByName(name, pageNum).execute().body()
-            ?: error("Not found song")
+            ?: emptyList()
     }
 }

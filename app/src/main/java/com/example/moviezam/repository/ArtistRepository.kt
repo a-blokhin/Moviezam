@@ -1,6 +1,7 @@
 package com.example.moviezam.repository
 
 import com.example.moviezam.models.Artist
+import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.models.MoviezamApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,5 +20,10 @@ class ArtistRepository {
     suspend fun getArtistById(id: Int): Artist = withContext(Dispatchers.IO) {
         return@withContext moviezamApi.getArtistById(id).execute().body()
             ?: error("Not found artist")
+    }
+
+    suspend fun getArtistsByName(name: String, page: Int): List<ArtistCard> = withContext(Dispatchers.IO) {
+        return@withContext moviezamApi.getArtistsByName(name, page).execute().body()
+            ?: emptyList()
     }
 }

@@ -1,6 +1,7 @@
 package com.example.moviezam.models
 
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -20,4 +21,10 @@ interface MoviezamApi {
         @Query("search") name: String,
         @Query("page") pageNumber: Int
     ): Call<List<SongCard>>
+
+    @GET("/find_artist")
+    fun getArtistsByName(
+        @Query("search") name: String,
+        @Query("page") pageNumber: Int
+    ): Call<List<ArtistCard>>
 }
