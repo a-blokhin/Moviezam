@@ -55,7 +55,7 @@ class ShazamFragment : Fragment()  {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         LinearLayoutManager(this.context)
         _binding = ActivityMainBinding.inflate(inflater, container, false)
 
@@ -67,45 +67,63 @@ class ShazamFragment : Fragment()  {
     override fun onStart() {
         super.onStart()
         binding.searchView.setOnClickListener {
-            val permissions = arrayOf(
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            ActivityCompat.requestPermissions(this.context as Activity, permissions, 0)
+            if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    this.requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                val permissions = arrayOf(
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+                ActivityCompat.requestPermissions(this.context as Activity, permissions, 0)
+            } else {
 
-            if (state){
+                if (state) {
                     state = false
                     val bundle = this.arguments
                     val output = bundle?.getString("output")
                     val dir = bundle?.getString("dir")
                     lifecycleScope.launch {
-                        Toast.makeText(getActivity(), "Запись 3.5 секунды пошла", Toast.LENGTH_LONG).show()
+                        Toast.makeText(getActivity(), "Запись 3.5 секунды пошла", Toast.LENGTH_LONG)
+                            .show()
                         song_name = withContext(Dispatchers.Default) {
-                         return@withContext viewModel.findSong(output.toString(), dir.toString())
+                            return@withContext viewModel.findSong(output.toString(), dir.toString())
                         }
                         val gson = Gson()
                         val convertedObject = gson.fromJson(song_name, JsonObject::class.java)
                         if (convertedObject["matches"].toString().length > 2) {
-                            Toast.makeText(getActivity(),
-                                gson.fromJson(convertedObject["track"].toString(),
-                                    JsonObject::class.java)["title"].toString(), Toast.LENGTH_LONG).show()
-                            Log.d("MediaRecorderder", gson.fromJson(
-                                convertedObject["track"].toString(),
-                                JsonObject::class.java)["title"].toString())
+                            Toast.makeText(
+                                getActivity(),
+                                gson.fromJson(
+                                    convertedObject["track"].toString(),
+                                    JsonObject::class.java
+                                )["title"].toString(), Toast.LENGTH_LONG
+                            ).show()
+                            Log.d(
+                                "MediaRecorderder", gson.fromJson(
+                                    convertedObject["track"].toString(),
+                                    JsonObject::class.java
+                                )["title"].toString()
+                            )
                         } else {
-                            Toast.makeText(getActivity(),"Песня не нашлась", Toast.LENGTH_LONG).show()
+                            Toast.makeText(getActivity(), "Песня не нашлась", Toast.LENGTH_LONG)
+                                .show()
                         }
 
                         Log.d("MediaRecorderder", song_name.toString())
                         state = true
                     }
 
-            }else{
+                } else {
                     Log.d("MediaRecorderder", "MediaRecorderder is working")
+                }
             }
         }
-
     }
     override fun onDestroyView() {
         super.onDestroyView()
