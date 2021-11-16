@@ -15,13 +15,12 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
         Fresco.initialize(this)
         setContentView(R.layout.activity_main)
 
-
-        val f: Fragment = ArtistFragment()
-        Store.id = 7130
+        val f: Fragment = FilmFragment()
+        Store.id = 1111
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, f, "ARTIST")
+                .replace(R.id.container, f, "FILM")
                 .commitAllowingStateLoss()
         }
     }

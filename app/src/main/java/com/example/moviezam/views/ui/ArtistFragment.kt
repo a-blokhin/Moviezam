@@ -159,4 +159,3 @@ class ArtistFragment : BaseFragment() {
 
 
 }
-

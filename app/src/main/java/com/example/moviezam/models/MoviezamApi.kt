@@ -11,4 +11,14 @@ interface MoviezamApi {
     suspend fun getArtistById(
         @Query("id") id: Int
     ): Response<Artist>
+
+    @GET("/film")
+    suspend fun getFilmById(
+        @Query("id") id: Int
+    ): Response<Film>
+
+    @GET("/song")
+    suspend fun getSongById(
+        @Query("id") id: Int
+    ): Response<Song>
 }
