@@ -1,113 +1,122 @@
 package com.example.moviezam.views.ui
 
-import android.os.Build
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.databinding.FragmentFilmBinding
-import com.example.moviezam.models.Film
+import com.example.moviezam.models.*
+import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
-import com.google.gson.Gson
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.lang.RuntimeException
 
-class FilmFragment : Fragment() {
+
+class FilmFragment : BaseFragment() {
     private var _binding: FragmentFilmBinding? = null
     private val viewModel = FilmViewModel()
-    private var film: Film? = null
+    private var filmSaved: Film? = null
+    private var mListener: OnListFragmentInteractionListener? = null
 
-    private var artistAdapter: ArtistCardAdapter? = null
-    private var songAdapter: SongCardAdapter? = null
-    private var filmAdapter: FilmCardAdapter? = null
+    private var songsAdapter: SongCardAdapter? = null
+    private var artistsAdapter: ArtistCardAdapter? = null
+    private var filmsAdapter: FilmCardAdapter? = null
 
     private val binding get() = _binding!!
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val bundle = this.arguments
 
-
-        if (bundle != null) {
-            lifecycleScope.launch {
-                film = async {viewModel.loadFilm(bundle.getInt("id"))}.await()
-                setUpBasic()
+    private fun setupObservers() {
+        viewModel.loadFilm(Store.id).observe(this, Observer {
+            it?.let { resource ->
+                when (resource.status) {
+                    Resource.Status.SUCCESS -> {
+                        binding.progressBar.visibility = View.GONE
+                        resource.data?.let { film -> setUpBasic(film) }
+                    }
+                    Resource.Status.ERROR -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
+                    }
+                    Resource.Status.LOADING -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                }
             }
+        })
+    }
 
-        } else {
-            val gson = Gson()
-            val json = bundle?.get("film").toString()
-            film = gson.fromJson(json, Film::class.java)
-            setUpBasic()
+
+    override fun onStart() {
+        super.onStart()
+        filmSaved?.let {
+            setUpBasic(it)
+            return
         }
-
+        if (Store.id > 0) {
+            setupObservers()
+        } else {
+            Toast.makeText(activity, "Film does not exist", Toast.LENGTH_LONG).show()
+        }
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-        val gson = Gson()
-        val json = gson.toJson(film)
-        savedInstanceState.putString("film", json)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentFilmBinding.inflate(inflater, container, false)
-        binding.artists.layoutManager = LinearLayoutManager(this.context)
+
         binding.songs.layoutManager = LinearLayoutManager(this.context)
+        binding.artists.layoutManager = LinearLayoutManager(this.context)
         binding.similar.layoutManager = LinearLayoutManager(this.context)
+
+        songsAdapter = mListener?.let { SongCardAdapter(it, listOf<SongCard>() ) }
+        artistsAdapter = mListener?.let { ArtistCardAdapter(it, listOf<ArtistCard>() ) }
+        filmsAdapter = mListener?.let { FilmCardAdapter(it, listOf<FilmCard>() ) }
+
+        binding.songs.adapter = songsAdapter
+        binding.artists.adapter = artistsAdapter
+        binding.similar.adapter = filmsAdapter
 
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun setUpBasic()  {
-        binding.filmImg.setImageURI(film?.image)
-        binding.filmTitle.text = film?.name
-
-        val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-        binding.filmDesc.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
-
-        if (film!!.artists != null) {
-            artistAdapter = ArtistCardAdapter(film!!.artists)
-            binding.artists.adapter = artistAdapter
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mListener = if (context is OnListFragmentInteractionListener) {
+            context
         } else {
-            binding.artists.visibility = View.GONE
-            binding.artistsSection.visibility = View.GONE
+            throw RuntimeException(
+                "$context must implement OnListFragmentInteractionListener"
+            )
         }
-
-        if (film!!.songs != null) {
-            songAdapter = SongCardAdapter(film!!.songs)
-            binding.songs.adapter = songAdapter
-        } else {
-            binding.songs.visibility = View.GONE
-            binding.songsSection.visibility = View.GONE
-        }
+    }
 
 
-        if (film!!.similar != null) {
-            filmAdapter = FilmCardAdapter(film!!.similar)
-            binding.similar.adapter = filmAdapter
-        } else {
-            binding.similar.visibility = View.GONE
-            binding.similarSection.visibility = View.GONE
-        }
+    private fun setUpBasic(film: Film) {
+        filmSaved = film
+        binding.filmImg.setImageURI(film.image)
+        binding.filmTitle.text = film.name
+        songsAdapter!!.setData(film.songs)
+        artistsAdapter!!.setData(film.artists)
+        filmsAdapter!!.setData(film.similar)
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
 }

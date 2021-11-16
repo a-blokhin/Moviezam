@@ -1,9 +1,11 @@
 package com.example.moviezam.repository
 
+import com.example.moviezam.models.Artist
 import com.example.moviezam.models.Song
 import com.example.moviezam.models.MoviezamApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import retrofit2.Retrofit
 
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,8 +18,7 @@ class SongRepository {
 
     private val moviezamApi = retrofit.create(MoviezamApi::class.java)
 
-    suspend fun getSongById(id: Int): Song = withContext(Dispatchers.IO) {
-        return@withContext moviezamApi.getSongById(id).execute().body()
-            ?: error("Not found song")
+    suspend fun getSongById(id: Int): Response<Song> {
+        return moviezamApi.getSongById(id)
     }
 }

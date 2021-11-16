@@ -1,91 +1,115 @@
 package com.example.moviezam.views.ui
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.databinding.FragmentFilmBinding
 import com.example.moviezam.databinding.FragmentSongBinding
-import com.example.moviezam.models.Film
-import com.example.moviezam.models.Song
+import com.example.moviezam.models.*
+import com.example.moviezam.viewmodels.ArtistViewModel
+import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.viewmodels.SongViewModel
 import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
-import com.google.gson.Gson
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import java.lang.RuntimeException
 
-class SongFragment : Fragment() {
+
+class SongFragment : BaseFragment() {
     private var _binding: FragmentSongBinding? = null
     private val viewModel = SongViewModel()
-    private var song: Song? = null
+    private var songSaved: Song? = null
+    private var mListener: OnListFragmentInteractionListener? = null
 
-    private var filmAdapter: FilmCardAdapter? = null
+    private var filmsAdapter: FilmCardAdapter? = null
 
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val bundle = this.arguments
 
-
-        if (bundle != null) {
-            lifecycleScope.launch {
-
-//                val gson = Gson()
-//                val json = bundle?.get("song").toString()
-//                song = gson.fromJson(json, Song::class.java)
-
-                song = async {viewModel.loadSong(bundle.getInt("id"))}.await()
-                setUpBasic()
+    private fun setupObservers() {
+        viewModel.loadSong(Store.id).observe(this, Observer {
+            it?.let { resource ->
+                when (resource.status) {
+                    Resource.Status.SUCCESS -> {
+                        binding.progressBar.visibility = View.GONE
+                        resource.data?.let { song -> setUpBasic(song) }
+                    }
+                    Resource.Status.ERROR -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
+                    }
+                    Resource.Status.LOADING -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                }
             }
+        })
+    }
 
-        } else {
-            val gson = Gson()
-            val json = bundle?.get("song").toString()
-            song = gson.fromJson(json, Song::class.java)
-            setUpBasic()
+
+    override fun onStart() {
+        super.onStart()
+        songSaved?.let {
+            setUpBasic(it)
+            return
         }
-
+        if (Store.id > 0) {
+            setupObservers()
+        } else {
+            Toast.makeText(activity, "Song does not exist", Toast.LENGTH_LONG).show()
+        }
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-        val gson = Gson()
-        val json = gson.toJson(song)
-        savedInstanceState.putString("song", json)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentSongBinding.inflate(inflater, container, false)
+
         binding.films.layoutManager = LinearLayoutManager(this.context)
+
+        filmsAdapter = mListener?.let { FilmCardAdapter(it, listOf<FilmCard>() ) }
+
+        binding.films.adapter = filmsAdapter
 
         return binding.root
     }
 
-    fun setUpBasic()  {
-        binding.songImg.setImageURI(song?.externalArtUrl)
-        binding.songTitle.text = song?.name
-        binding.songDesc.text = song?.artist.plus(" - ").plus(song?.albumName)
-
-        if (song!!.films != null) {
-            filmAdapter = FilmCardAdapter(song!!.films)
-            binding.films.adapter = filmAdapter
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mListener = if (context is OnListFragmentInteractionListener) {
+            context
         } else {
-            binding.films.visibility = View.GONE
-            binding.filmsSection.visibility = View.GONE
+            throw RuntimeException(
+                "$context must implement OnListFragmentInteractionListener"
+            )
         }
+    }
+
+
+    private fun setUpBasic(song: Song) {
+        songSaved = song
+        binding.songImg.setImageURI(song.externalArtUrl)
+        binding.songTitle.text = song.name
+        binding.songDesc.text = song.artist
+        filmsAdapter!!.setData(song.films)
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
 }

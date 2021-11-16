@@ -9,8 +9,7 @@ import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment.OnListFragmentInteractionListener
 
 
-class SongCardAdapter(private var mListener: OnListFragmentInteractionListener) : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>() {
-    private var songs: List<SongCard>? = null
+class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, private var songs: List<SongCard>) : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongCardViewHolder {
@@ -36,8 +35,10 @@ class SongCardAdapter(private var mListener: OnListFragmentInteractionListener) 
 
         fun bind(song: SongCard) {
             binding.songName.text = song.name
-            binding.artistName.text = song.artist
             binding.avatarImage.setImageURI(song.image)
+            binding.itemSong.setOnClickListener{
+                mListener.onListFragmentInteraction(667, ArtistFragment())
+            }
         }
     }
 
