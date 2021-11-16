@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.R
 import com.example.moviezam.databinding.ActivityMainBinding
 import com.example.moviezam.viewmodels.ShazamViewModel
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
@@ -37,7 +36,6 @@ class ShazamFragment : Fragment()  {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fresco.initialize(this.context)
     }
 
 
@@ -52,7 +50,7 @@ class ShazamFragment : Fragment()  {
 
         return binding.root
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     fun generateJson(convertedObject: JsonObject): JsonObject? {
         val songJson = JsonParser().parse("{}").asJsonObject
         songJson.addProperty("id", -1)
@@ -78,13 +76,91 @@ class ShazamFragment : Fragment()  {
         songJson.addProperty("films", "[]")// надо сделать List<FilmCard> или не надо
         return songJson
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun search(){if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) !=
+        PackageManager.PERMISSION_GRANTED &&
+        ContextCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) !=
+        PackageManager.PERMISSION_GRANTED
+    ) {
+        val permissions = arrayOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        ActivityCompat.requestPermissions(this.context as Activity, permissions, 0)
+    } else {
+
+        if (state) {
+            state = false
+            val bundle = this.arguments
+            val output = bundle?.getString("output")
+            val dir = bundle?.getString("dir")
+            lifecycleScope.launch {
+                Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG)
+                    .show()
+                song_name = withContext(Dispatchers.Default) {
+                    return@withContext viewModel.findSong(output.toString(), dir.toString())
+                }
+                val convertedObject = JsonParser().parse(song_name).asJsonObject
+                if (convertedObject.get("matches").toString().length > 2) {
+                    Toast.makeText(
+                        getActivity(),convertedObject.getAsJsonObject("track")["title"].asString, Toast.LENGTH_LONG
+                    ).show()
+
+                    val songJson = generateJson(convertedObject).toString()
+
+                    Log.d(
+                        "MediaRecorderder", convertedObject.getAsJsonObject("track")["title"].asString
+                    )
+
+                    //val req = convertedObject.getAsJsonObject("track").getAsJsonObject("urlparams")["{tracktitle}"].asString
+                    val req =convertedObject.getAsJsonObject("track").getAsJsonObject("urlparams")["{tracktitle}"].asString.lowercase()
+
+                    Log.d(
+                        "MediaRecorderder", req
+                    )
+
+                    Toast.makeText(getActivity(),
+                        convertedObject.getAsJsonObject("track")["title"].asString, Toast.LENGTH_LONG
+                    ).show()
+
+
+
+                    /*
+                    val nextFrag= SongFragment()
+                    val bundle = Bundle()
+                    bundle.putString("shazam", songJson)
+                    nextFrag.arguments = bundle
+                    getActivity()?.getSupportFragmentManager()?.beginTransaction()
+                        ?.replace(R.id.container, nextFrag, "findThisFragment")
+                        ?.addToBackStack(null)
+                        ?.commit()
+                     */
+
+                } else {
+                    Toast.makeText(getActivity(), "Песня не нашлась", Toast.LENGTH_LONG)
+                        .show()
+                }
+
+                Log.d("MediaRecorderder", song_name.toString())
+                state = true
+            }
+
+        } else {
+            Log.d("MediaRecorderder", "MediaRecorderder is working")
+        }
+    }}
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
         //раскоментировать это и нажимать на значок лупы второй сверху строки поиска
+
         /*
-        binding.searchView2.setOnClickListener {
+        binding.searchView.setOnClickListener {
             val fragment2 = SearchFragment()
             getActivity()?.getSupportFragmentManager()?.beginTransaction()
                                 ?.replace(R.id.container, fragment2, "findThisFragment")
@@ -92,83 +168,11 @@ class ShazamFragment : Fragment()  {
                                 ?.commit()}
         */
 
+        binding.fab.setOnClickListener {
+            search()
+        }
         binding.searchView.setOnClickListener {
-
-            if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(
-                    this.requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) !=
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                val permissions = arrayOf(
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-                ActivityCompat.requestPermissions(this.context as Activity, permissions, 0)
-            } else {
-
-                if (state) {
-                    state = false
-                    val bundle = this.arguments
-                    val output = bundle?.getString("output")
-                    val dir = bundle?.getString("dir")
-                    lifecycleScope.launch {
-                        Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG)
-                            .show()
-                        song_name = withContext(Dispatchers.Default) {
-                            return@withContext viewModel.findSong(output.toString(), dir.toString())
-                        }
-                        val convertedObject = JsonParser().parse(song_name).asJsonObject
-                        if (convertedObject.get("matches").toString().length > 2) {
-                            Toast.makeText(
-                                getActivity(),convertedObject.getAsJsonObject("track")["title"].asString, Toast.LENGTH_LONG
-                            ).show()
-
-                            val songJson = generateJson(convertedObject).toString()
-
-                            Log.d(
-                                "MediaRecorderder", convertedObject.getAsJsonObject("track")["title"].asString
-                            )
-
-                            //val req = convertedObject.getAsJsonObject("track").getAsJsonObject("urlparams")["{tracktitle}"].asString
-                            val req =convertedObject.getAsJsonObject("track").getAsJsonObject("urlparams")["{tracktitle}"].asString.lowercase()
-
-                            Log.d(
-                                "MediaRecorderder", req
-                            )
-
-                            Toast.makeText(getActivity(),
-                                convertedObject.getAsJsonObject("track")["title"].asString, Toast.LENGTH_LONG
-                            ).show()
-
-
-
-
-                            val nextFrag= ShazamFragment()
-                            val bundle = Bundle()
-                            bundle.putString("shazam", songJson)
-                            nextFrag.arguments = bundle
-                            getActivity()?.getSupportFragmentManager()?.beginTransaction()
-                                ?.replace(R.id.container, nextFrag, "findThisFragment")
-                                ?.addToBackStack(null)
-                                ?.commit()
-
-                        } else {
-                            Toast.makeText(getActivity(), "Песня не нашлась", Toast.LENGTH_LONG)
-                                .show()
-                        }
-
-                        Log.d("MediaRecorderder", song_name.toString())
-                        state = true
-                    }
-
-                } else {
-                    Log.d("MediaRecorderder", "MediaRecorderder is working")
-                }
-            }
+            Toast.makeText(getActivity(), "прожалось searchview", Toast.LENGTH_LONG).show()
         }
     }
     override fun onDestroyView() {
