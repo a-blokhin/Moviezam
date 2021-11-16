@@ -92,6 +92,7 @@ class ShazamFragment : Fragment()  {
                                 ?.addToBackStack(null)
                                 ?.commit()
         }*/
+
         binding.searchView.setOnClickListener {
 
             if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) !=
