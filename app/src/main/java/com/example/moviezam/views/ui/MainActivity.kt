@@ -6,7 +6,6 @@ import com.example.moviezam.R
 import androidx.fragment.app.Fragment
 
 
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

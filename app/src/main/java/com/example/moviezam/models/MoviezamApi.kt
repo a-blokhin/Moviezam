@@ -7,9 +7,9 @@ import retrofit2.http.Query
 
 interface MoviezamApi {
     @GET("/artist")
-    fun getArtistById(
+    suspend fun getArtistById(
         @Query("id") id: Int
-    ): Call<Artist>
+    ): Response<Artist>
 
     @GET("/song")
     fun getSongById(

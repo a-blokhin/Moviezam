@@ -2,23 +2,28 @@ package com.example.moviezam.views.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.databinding.ItemSongBinding
 import com.example.moviezam.models.SongCard
 
-class SongCardAdapter(private var songs: List<SongCard> = emptyList()) : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>() {
+class SongCardAdapter() : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>() {
+    private var songs: List<SongCard>? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongCardViewHolder {
         val binding = ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SongCardViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: SongCardViewHolder, position: Int) {
-        holder.bind(songs[position])
+    fun setData(songs: List<SongCard>){
+        this.songs = songs
+        notifyDataSetChanged()
     }
 
-    override fun getItemCount() = songs.size
+    override fun onBindViewHolder(holder: SongCardViewHolder, position: Int) {
+        holder.bind(songs!![position])
+    }
+
+    override fun getItemCount() = if (songs != null) songs!!.size else 0
 
     class SongCardViewHolder(
         private val binding: ItemSongBinding
