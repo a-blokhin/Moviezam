@@ -26,7 +26,6 @@ android:paddingVertical="8dp">
     fresco:roundingBorderWidth="1dp"
     fresco:roundAsCircle="true"
 
-
     app:layout_constraintDimensionRatio="1:1"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"

@@ -4,9 +4,11 @@ import androidx.fragment.app.Fragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviezam.R
+import com.example.moviezam.models.Store
 import com.facebook.drawee.backends.pipeline.Fresco
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +21,10 @@ class MainActivity : AppCompatActivity() {
         bundle.putInt("id", 1111)
         f.arguments = bundle
 
+//        val f: Fragment = ArtistFragment()
+//        Store.id = 7130
+
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, f, "SONG")
@@ -26,6 +32,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
+    override fun onListFragmentInteraction(id: Int, f: BaseFragment) {
+        Store.id = id
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, f)
+            .addToBackStack(null)
+            .commit()
+    }
 }
