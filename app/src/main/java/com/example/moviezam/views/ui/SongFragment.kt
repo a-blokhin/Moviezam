@@ -101,7 +101,9 @@ class SongFragment : BaseFragment() {
         songSaved = song
         binding.songImg.setImageURI(song.externalArtUrl)
         binding.songTitle.text = song.name
-        binding.songDesc.text = song.artist.plus(" - ").plus(song.albumName)
+        binding.songTitle.isSelected = true
+        binding.songDesc.text = if (song.albumName != "") song.artist.plus(" - ").plus(song.albumName) else song.artist
+        binding.songDesc.isSelected = true
         filmsAdapter!!.setData(song.films)
 
     }

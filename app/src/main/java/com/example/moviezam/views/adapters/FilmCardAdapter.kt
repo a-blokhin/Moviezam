@@ -44,6 +44,7 @@ class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteract
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(film: FilmCard) {
             binding.filmName.text = film.name
+            binding.filmName.isSelected = true
             if (film.image == "" || film.image == null) {
                 binding.avatarImage.setImageURI("https://images.unsplash.com/photo-1535016120720-40c646be5580?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80")
             } else {
@@ -51,6 +52,7 @@ class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteract
             }
             val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
             binding.releaseDate.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
+            binding.releaseDate.isSelected = true
             binding.itemFilm.setOnClickListener{
                 mListener.onListFragmentInteraction(film.id, FilmFragment())
             }

@@ -114,8 +114,10 @@ class FilmFragment : BaseFragment() {
         filmSaved = film
         binding.filmImg.setImageURI(film.image)
         binding.filmTitle.text = film.name
+        binding.filmTitle.isSelected = true
         val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
         binding.filmDesc.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
+        binding.filmDesc.isSelected = true
         songsAdapter!!.setData(film.songs)
         artistsAdapter!!.setData(film.artists)
 

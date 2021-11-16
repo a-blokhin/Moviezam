@@ -36,7 +36,9 @@ class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, 
 
         fun bind(song: SongCard) {
             binding.songName.text = song.name
-            binding.artistName.text = song.artist.plus(" - ").plus(song.album)
+            binding.songName.isSelected = true
+            binding.artistName.text = if (song.album != "") song.artist.plus(" - ").plus(song.album) else song.artist
+            binding.artistName.isSelected = true
             if (song.image == "" || song.image == null) {
                 binding.avatarImage.setImageURI("https://image.shutterstock.com/image-vector/music-icon-symbol-simple-design-260nw-1934430458.jpg")
             } else {
