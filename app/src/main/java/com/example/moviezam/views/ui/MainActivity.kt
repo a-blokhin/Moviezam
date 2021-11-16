@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, shazamFragment, "ARTIST")
+                .replace(R.id.container, shazamFragment, "SHAZAM")
                 .commitAllowingStateLoss()
         }
     }

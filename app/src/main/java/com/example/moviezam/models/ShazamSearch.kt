@@ -49,7 +49,7 @@ class ShazamSearch {
 
             mediaRecorder?.prepare()
             mediaRecorder?.start()
-            delay(3500)
+            delay(4500)
             mediaRecorder?.stop()
             mediaRecorder?.reset()
             mediaRecorder?.release()
