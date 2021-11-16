@@ -7,7 +7,8 @@ import com.example.moviezam.R
 import com.example.moviezam.models.Store
 import com.facebook.drawee.backends.pipeline.Fresco
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val f: Fragment = ArtistFragment()
-        Store.artistId = 7130
+        Store.id = 7130
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -25,6 +26,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
+    override fun onListFragmentInteraction(id: Int, f: BaseFragment) {
+        Store.id = id
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, f)
+            .addToBackStack(null)
+            .commit()
+    }
 }

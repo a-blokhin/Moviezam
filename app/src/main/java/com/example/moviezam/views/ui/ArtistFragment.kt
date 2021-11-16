@@ -1,15 +1,15 @@
 package com.example.moviezam.views.ui
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.models.Artist
@@ -17,29 +17,22 @@ import com.example.moviezam.models.Resource
 import com.example.moviezam.models.Store
 import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.views.adapters.SongCardAdapter
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.lang.RuntimeException
 
 
-class ArtistFragment : Fragment() {
+class ArtistFragment : BaseFragment() {
     private var _binding: FragmentArtistBinding? = null
     private val viewModel = ArtistViewModel()
-    private var bundle: Bundle? = null
+    private var artistSaved: Artist? = null
+    private var mListener: OnListFragmentInteractionListener? = null
 
     private var adapter: SongCardAdapter? = null
 
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        bundle = this.arguments
-
-    }
 
     private fun setupObservers() {
-        viewModel.loadArtist(Store.artistId).observe(this, Observer {
+        viewModel.loadArtist(Store.id).observe(this, Observer {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
@@ -61,7 +54,11 @@ class ArtistFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (Store.artistId > 0) {
+        artistSaved?.let {
+            setUpBasic(it)
+            return
+        }
+        if (Store.id > 0) {
             setupObservers()
         } else {
             Toast.makeText(activity, "Artist does not exist =(", Toast.LENGTH_LONG).show()
@@ -75,14 +72,27 @@ class ArtistFragment : Fragment() {
     ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
         binding.songs.layoutManager = LinearLayoutManager(this.context)
-        adapter = SongCardAdapter()
+        adapter = mListener?.let { SongCardAdapter(it) }
         binding.songs.adapter = adapter
+
 
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mListener = if (context is OnListFragmentInteractionListener) {
+            context
+        } else {
+            throw RuntimeException(
+                "$context must implement OnListFragmentInteractionListener"
+            )
+        }
+    }
+
 
     private fun setUpBasic(artist: Artist) {
+        artistSaved = artist
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
@@ -146,6 +156,7 @@ class ArtistFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 
 }
 
