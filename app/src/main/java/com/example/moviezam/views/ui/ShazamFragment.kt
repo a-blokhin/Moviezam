@@ -82,16 +82,15 @@ class ShazamFragment : Fragment()  {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
+        //раскоментировать это и нажимать на значок лупы второй сверху строки поиска
         /*
-        binding.searchView.setOnClickListener {
+        binding.searchView2.setOnClickListener {
             val fragment2 = SearchFragment()
-            bundle.putString("shazam", songJson)
-                            nextFrag.arguments = bundle
-                            getActivity()?.getSupportFragmentManager()?.beginTransaction()
-                                ?.replace(R.id.container, nextFrag, "findThisFragment")
+            getActivity()?.getSupportFragmentManager()?.beginTransaction()
+                                ?.replace(R.id.container, fragment2, "findThisFragment")
                                 ?.addToBackStack(null)
-                                ?.commit()
-        }*/
+                                ?.commit()}
+        */
 
         binding.searchView.setOnClickListener {
 
