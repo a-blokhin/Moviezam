@@ -1,5 +1,6 @@
 package com.example.moviezam.views.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.example.moviezam.views.adapters.SongCardAdapter
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.gson.Gson
 import kotlinx.coroutines.*
+import java.lang.RuntimeException
 
 class SearchFragment: Fragment() {
     private var _binding : FragmentSearchBinding? = null
@@ -34,7 +36,7 @@ class SearchFragment: Fragment() {
     private var songCardAdapter: SongCardAdapter? = null
     private var artistCardAdapter: ArtistCardAdapter? = null
 
-    private var currJob: Job? = null
+    private var mListener: BaseFragment.OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Fresco.initialize(this.context)
@@ -97,23 +99,15 @@ class SearchFragment: Fragment() {
         return binding.root
     }
 
-    fun uploadSongList(text: String) {
-        currJob?.cancel()
-        songList.clear()
-
-        currJob = CoroutineScope(Dispatchers.IO).launch {
-            songsViewModel.loadSongsByPrefix(text, songCardAdapter!!)
-            songList.addAll(songsViewModel.songList)
+    private fun uploadSongList(text: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            songsViewModel.loadSongsByPrefix(text, songCardAdapter!!, songList)
         }
     }
 
-    fun uploadArtistList(text: String) {
-        currJob?.cancel()
-        artistList.clear()
-
-        currJob = CoroutineScope(Dispatchers.IO).launch {
-            artistsViewModel.loadArtistsByPrefix(text, artistCardAdapter!!)
-            artistList.addAll(artistsViewModel.artistList)
+    private fun uploadArtistList(text: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            artistsViewModel.loadArtistsByPrefix(text, artistCardAdapter!!, artistList)
         }
     }
 
@@ -123,10 +117,21 @@ class SearchFragment: Fragment() {
     }
 
     private fun setUpBasic()  {
-        songCardAdapter = SongCardAdapter(songList)
+        songCardAdapter = SongCardAdapter(mListener!!, songList)
         artistCardAdapter = ArtistCardAdapter(artistList)
 
         binding.list.adapter = songCardAdapter
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mListener = if (context is BaseFragment.OnListFragmentInteractionListener) {
+            context
+        } else {
+            throw RuntimeException(
+                "$context must implement OnListFragmentInteractionListener"
+            )
+        }
     }
 
     private fun setDefaultSongs() : MutableList<SongCard> {

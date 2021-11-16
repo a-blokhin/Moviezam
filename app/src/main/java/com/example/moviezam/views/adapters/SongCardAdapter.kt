@@ -11,7 +11,6 @@ import com.example.moviezam.views.ui.BaseFragment.OnListFragmentInteractionListe
 
 class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, private var songs: List<SongCard>) : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>() {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongCardViewHolder {
         val binding = ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SongCardViewHolder(binding, mListener)
@@ -23,10 +22,10 @@ class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, 
     }
 
     override fun onBindViewHolder(holder: SongCardViewHolder, position: Int) {
-        holder.bind(songs!![position])
+        holder.bind(songs[position])
     }
 
-    override fun getItemCount() = if (songs != null) songs!!.size else 0
+    override fun getItemCount() = songs.size
 
     class SongCardViewHolder(
         private val binding: ItemSongBinding,

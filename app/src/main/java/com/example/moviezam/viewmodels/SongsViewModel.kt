@@ -10,31 +10,36 @@ import java.lang.Thread.sleep
 
 class SongsViewModel : ViewModel() {
     private val repo = SongRepository()
-    var songList = mutableListOf<SongCard>()
-    var job: Job? = null
+    private var job: Job? = null
 
-    suspend fun loadSongsByPrefix(prefix: String, adapter: SongCardAdapter): MutableList<SongCard> {
-        val allSongs = mutableListOf<SongCard>()
+    suspend fun loadSongsByPrefix(prefix: String, adapter: SongCardAdapter, adapterList: MutableList<SongCard>) {
         job?.cancel()
+
         job = CoroutineScope(Dispatchers.IO).launch {
+            adapterList.clear()
+            val update = CoroutineScope(Dispatchers.Main).launch {
+                adapter.notifyDataSetChanged()
+            }
+            update.join()
+
             var pageNum = 1
             var songsPerPage = repo.getSongsPageByName(prefix, pageNum)
-            songList.clear()
+
             val loading = launch {
                 while (songsPerPage.isNotEmpty()) {
                     pageNum++
-                    allSongs += songsPerPage
-                    songList.addAll(songsPerPage)
-                    val update = launch(Dispatchers.Main) {
-                        adapter.notifyDataSetChanged()
+                    val prevListSize = adapterList.size
+                    adapterList.addAll(songsPerPage)
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        adapter.notifyItemRangeInserted(prevListSize, songsPerPage.size)
                     }
-                    update.join()
                     songsPerPage = repo.getSongsPageByName(prefix, pageNum)
                 }
             }
             loading.join()
         }
-        return allSongs
+        job!!.join()
     }
 
     override fun onCleared() {
