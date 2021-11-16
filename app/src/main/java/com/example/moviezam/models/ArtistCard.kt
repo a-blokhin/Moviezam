@@ -7,6 +7,6 @@ data class ArtistCard(
     val id: Int,
     @SerializedName("name")
     val name: String,
-    @SerializedName("external_art_url")
+    @SerializedName("image")
     val image: String
 )

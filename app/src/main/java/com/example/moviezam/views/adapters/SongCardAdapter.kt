@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.databinding.ItemSongBinding
+import com.example.moviezam.models.Artist
 import com.example.moviezam.models.SongCard
 import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment.OnListFragmentInteractionListener
@@ -33,13 +34,17 @@ class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, 
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(song: SongCard) {
             binding.songName.text = song.name
-            binding.avatarImage.setImageURI(song.image)
             binding.artistName.text = song.artist
+
             if (song.image == "")
                 binding.avatarImage
                     .setImageURI("https://i.pinimg.com/originals/dc/5d/ab/dc5dabf254765cc40a460496aeba681a.jpg")
             else
                 binding.avatarImage.setImageURI(song.image)
+
+            binding.itemSong.setOnClickListener{
+                mListener.onListFragmentInteraction(7130, ArtistFragment())
+            }
         }
     }
 }

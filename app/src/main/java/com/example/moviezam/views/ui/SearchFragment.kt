@@ -32,16 +32,16 @@ class SearchFragment: Fragment() {
 
     private var songList: MutableList<SongCard> = setDefaultSongs()
     private var artistList: MutableList<ArtistCard> = mutableListOf()
+    //TODO: заглушка, потом поменять на карточки фильмов
+    private var filmList: MutableList<SongCard> = mutableListOf()
 
     private var songCardAdapter: SongCardAdapter? = null
     private var artistCardAdapter: ArtistCardAdapter? = null
+    //TODO: заглушка, поменять на адаптер фильмов
+    private var filmCardAdapter: SongCardAdapter?= null
 
     private var mListener: BaseFragment.OnListFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Fresco.initialize(this.context)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,52 +50,6 @@ class SearchFragment: Fragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         setUpBasic()
-
-        binding.list.layoutManager = LinearLayoutManager(this.context)
-        binding.list.addItemDecoration(
-            DividerItemDecoration(
-                this.context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
-
-        binding.buttonView.setOnCheckedChangeListener { _, id ->
-            when (id) {
-                binding.songButton.id -> {
-                    binding.list.adapter = songCardAdapter
-                }
-                binding.artistButton.id -> {
-                    binding.list.adapter = artistCardAdapter
-                }
-                binding.filmButton.id -> TODO()
-            }
-        }
-
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
-                    when(binding.buttonView.checkedRadioButtonId) {
-                        binding.songButton.id -> uploadSongList(query)
-                        binding.artistButton.id -> uploadArtistList(query)
-                        binding.filmButton.id -> TODO()
-                    }
-                }
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                val minSizeToSearch = 2
-                if (newText != null && newText.length > minSizeToSearch) {
-                    when(binding.buttonView.checkedRadioButtonId) {
-                        binding.songButton.id -> uploadSongList(newText)
-                        binding.artistButton.id -> uploadArtistList(newText)
-                        binding.filmButton.id -> TODO()
-                    }
-                }
-                return false
-            }
-        })
-
         return binding.root
     }
 
@@ -118,9 +72,55 @@ class SearchFragment: Fragment() {
 
     private fun setUpBasic()  {
         songCardAdapter = SongCardAdapter(mListener!!, songList)
-        artistCardAdapter = ArtistCardAdapter(artistList)
+        artistCardAdapter = ArtistCardAdapter(mListener!!, artistList)
 
         binding.list.adapter = songCardAdapter
+
+        binding.list.layoutManager = LinearLayoutManager(this.context)
+        binding.list.addItemDecoration(
+            DividerItemDecoration(
+                this.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+
+        binding.buttonView.setOnCheckedChangeListener { _, id ->
+            when (id) {
+                binding.songButton.id -> {
+                    binding.list.adapter = songCardAdapter
+                }
+                binding.artistButton.id -> {
+                    binding.list.adapter = artistCardAdapter
+                }
+                binding.filmButton.id -> {}
+            }
+        }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    when(binding.buttonView.checkedRadioButtonId) {
+                        binding.songButton.id -> uploadSongList(query)
+                        binding.artistButton.id -> uploadArtistList(query)
+                        binding.filmButton.id -> {}
+                    }
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val minSizeToSearch = 2
+                if (newText != null && newText.length > minSizeToSearch) {
+                    when(binding.buttonView.checkedRadioButtonId) {
+                        binding.songButton.id -> uploadSongList(newText)
+                        binding.artistButton.id -> uploadArtistList(newText)
+                        binding.filmButton.id -> {}
+                    }
+                }
+                return false
+            }
+        })
+
     }
 
     override fun onAttach(context: Context) {
