@@ -10,6 +10,7 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentSearchBinding
 import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.models.SongCard
@@ -109,8 +110,7 @@ class SearchFragment: Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val minSizeToSearch = 2
-                if (newText != null && newText.length > minSizeToSearch) {
+                if (newText != null) {
                     when(binding.buttonView.checkedRadioButtonId) {
                         binding.songButton.id -> uploadSongList(newText)
                         binding.artistButton.id -> uploadArtistList(newText)
@@ -120,7 +120,6 @@ class SearchFragment: Fragment() {
                 return false
             }
         })
-
     }
 
     override fun onAttach(context: Context) {
