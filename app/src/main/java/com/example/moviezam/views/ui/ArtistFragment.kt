@@ -31,7 +31,6 @@ class ArtistFragment : BaseFragment() {
 
     private val binding get() = _binding!!
 
-
     private fun setupObservers() {
         viewModel.loadArtist(Store.id).observe(this, Observer {
             it?.let { resource ->
@@ -91,9 +90,9 @@ class ArtistFragment : BaseFragment() {
         }
     }
 
-
     private fun setUpBasic(artist: Artist) {
         artistSaved = artist
+
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
