@@ -44,11 +44,15 @@ class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteract
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(film: FilmCard) {
             binding.filmName.text = film.name
-            binding.avatarImage.setImageURI(film.image)
+            if (film.image == "" || film.image == null) {
+                binding.avatarImage.setImageURI("https://images.unsplash.com/photo-1535016120720-40c646be5580?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80")
+            } else {
+                binding.avatarImage.setImageURI(film.image)
+            }
             val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
             binding.releaseDate.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
             binding.itemFilm.setOnClickListener{
-                mListener.onListFragmentInteraction(667, FilmFragment())
+                mListener.onListFragmentInteraction(film.id, FilmFragment())
             }
         }
     }

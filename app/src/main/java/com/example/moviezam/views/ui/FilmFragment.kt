@@ -3,12 +3,15 @@ package com.example.moviezam.views.ui
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentArtistBinding
@@ -20,6 +23,8 @@ import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
 import java.lang.RuntimeException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class FilmFragment : BaseFragment() {
@@ -35,6 +40,7 @@ class FilmFragment : BaseFragment() {
     private val binding get() = _binding!!
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupObservers() {
         viewModel.loadFilm(Store.id).observe(this, Observer {
             it?.let { resource ->
@@ -103,13 +109,22 @@ class FilmFragment : BaseFragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpBasic(film: Film) {
         filmSaved = film
         binding.filmImg.setImageURI(film.image)
         binding.filmTitle.text = film.name
+        val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
+        binding.filmDesc.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
         songsAdapter!!.setData(film.songs)
         artistsAdapter!!.setData(film.artists)
-        filmsAdapter!!.setData(film.similar)
+
+        if (film.similar != null) {
+            filmsAdapter!!.setData(film.similar)
+        } else {
+            binding.similarSection.visibility = View.GONE
+            binding.similar.visibility = View.GONE
+        }
 
     }
 

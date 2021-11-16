@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, f, "SONG")
+                .replace(R.id.container, f, "FILM")
                 .commitAllowingStateLoss()
         }
     }

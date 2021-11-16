@@ -17,7 +17,10 @@ import com.example.moviezam.views.ui.FilmFragment
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class ArtistCardAdapter(private var mListener: BaseFragment.OnListFragmentInteractionListener, private var artists: List<ArtistCard>) : RecyclerView.Adapter<ArtistCardAdapter.ArtistCardViewHolder>() {
+class ArtistCardAdapter(
+    private var mListener: BaseFragment.OnListFragmentInteractionListener,
+    private var artists: List<ArtistCard>
+) : RecyclerView.Adapter<ArtistCardAdapter.ArtistCardViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistCardViewHolder {
@@ -45,9 +48,13 @@ class ArtistCardAdapter(private var mListener: BaseFragment.OnListFragmentIntera
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(artist: ArtistCard) {
             binding.artistName.text = artist.name
-            binding.avatarImage.setImageURI(artist.image)
-            binding.itemArtist.setOnClickListener{
-                mListener.onListFragmentInteraction(667, ArtistFragment())
+            if (artist.image == "" || artist.image == null) {
+                binding.avatarImage.setImageURI("https://contractdynamics.com/wp-content/uploads/music-bckg.jpg")
+            } else {
+                binding.avatarImage.setImageURI(artist.image)
+            }
+            binding.itemArtist.setOnClickListener {
+                mListener.onListFragmentInteraction(artist.id, ArtistFragment())
             }
         }
     }

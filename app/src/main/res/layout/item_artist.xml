@@ -21,7 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:roundingBorderColor="@color/black"
-        fresco:backgroundImage="@drawable/musician_default"
         fresco:roundAsCircle="true"
         fresco:roundBottomEnd="false"
         fresco:roundBottomLeft="false"

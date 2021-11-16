@@ -91,7 +91,7 @@
                 android:layout_marginTop="12dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Фильмы"
+                android:text="Films"
                 android:textAlignment="viewStart"
                 android:textColor="#18191F"
                 android:textSize="44sp"

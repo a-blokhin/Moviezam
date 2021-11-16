@@ -3,10 +3,13 @@ package com.example.moviezam.repository
 import com.example.moviezam.models.Artist
 import com.example.moviezam.models.Film
 import com.example.moviezam.models.MoviezamApi
+import com.example.moviezam.models.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.await
+import retrofit2.awaitResponse
 
 import retrofit2.converter.gson.GsonConverterFactory
 
