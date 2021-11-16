@@ -22,7 +22,7 @@ data class Resource<T>(
             return Resource(
                 Status.ERROR,
                 data,
-                "Server error"
+                "Server error or does not exist"
             )
         }
 
