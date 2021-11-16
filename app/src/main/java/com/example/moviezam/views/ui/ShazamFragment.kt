@@ -122,7 +122,6 @@ class ShazamFragment : Fragment()  {
                         song_name = withContext(Dispatchers.Default) {
                             return@withContext viewModel.findSong(output.toString(), dir.toString())
                         }
-                        song_name
                         val convertedObject = JsonParser().parse(song_name).asJsonObject
                         if (convertedObject.get("matches").toString().length > 2) {
                             Toast.makeText(

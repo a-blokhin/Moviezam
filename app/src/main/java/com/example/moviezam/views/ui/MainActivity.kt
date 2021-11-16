@@ -11,31 +11,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
 class MainActivity : AppCompatActivity() {
-    fun generateJson(convertedObject: JsonObject): JsonObject? {
-        val songJson = JsonParser().parse("{}").asJsonObject
-        songJson.addProperty("id", -1)
-        songJson.addProperty(
-            "name", convertedObject.getAsJsonObject("track")["title"].asString
-        )
-        songJson.addProperty(
-            "name_stub", ""
-        )
-        songJson.addProperty(
-            "artist", convertedObject.getAsJsonObject("track")["subtitle"].asString
-        )
-        songJson.addProperty("album_name", "")
-        songJson.addProperty(
-            "external_art_url", convertedObject.getAsJsonObject("track")
-                .getAsJsonObject("images")["background"].asString
-        )
-        songJson.addProperty("amazon", "")
-        songJson.addProperty("apple_music", "")
-        songJson.addProperty("itunes", "")
-        songJson.addProperty("spotify", "")
-        songJson.addProperty("youtube", "")
-        songJson.addProperty("films", "[]")// надо сделать List<FilmCard> или не надо
-        return songJson
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString("output", externalCacheDir?.absolutePath + "/soundrecorder/recording.wav")
         bundle.putString("dir", externalCacheDir?.absolutePath + "/soundrecorder/")
-
+        shazamFragment.arguments = bundle
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, shazamFragment, "SHAZAM")
