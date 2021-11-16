@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.models.Artist
 import com.example.moviezam.models.Resource
+import com.example.moviezam.models.SongCard
 import com.example.moviezam.models.Store
 import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.views.adapters.SongCardAdapter
@@ -72,7 +73,7 @@ class ArtistFragment : BaseFragment() {
     ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
         binding.songs.layoutManager = LinearLayoutManager(this.context)
-        adapter = mListener?.let { SongCardAdapter(it) }
+        adapter = mListener?.let { SongCardAdapter(it, listOf<SongCard>() ) }
         binding.songs.adapter = adapter
 
 
