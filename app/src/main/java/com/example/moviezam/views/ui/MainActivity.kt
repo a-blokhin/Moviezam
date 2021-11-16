@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviezam.R
+import com.example.moviezam.models.Store
 import com.facebook.drawee.backends.pipeline.Fresco
 
 class MainActivity : AppCompatActivity() {
@@ -15,9 +16,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val f: Fragment = ArtistFragment()
-        val bundle = Bundle()
-        bundle.putInt("id", 7130)
-        f.arguments = bundle
+        Store.artistId = 7130
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
