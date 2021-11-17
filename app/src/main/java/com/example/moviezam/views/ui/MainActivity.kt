@@ -13,7 +13,11 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
         super.onCreate(savedInstanceState)
         Fresco.initialize(this)
         setContentView(R.layout.activity_main)
-        onListFragmentInteraction(0, ShazamFragment())
+        val f = ShazamFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, f)
+            .commit()
     }
 
     override fun onListFragmentInteraction(id: Int, f: BaseFragment) {
