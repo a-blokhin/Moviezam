@@ -21,6 +21,7 @@ import com.example.moviezam.viewmodels.SongViewModel
 import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
+import com.google.gson.Gson
 import java.lang.RuntimeException
 
 
@@ -66,6 +67,9 @@ class SongFragment : BaseFragment() {
         }
         if (Store.id > 0) {
             setupObservers()
+        } else if (Store.id == -1) {
+            val gson = Gson()
+            setUpBasic(gson.fromJson(Store.shazam.toString(), Song::class.java))
         } else {
             Toast.makeText(activity, "Song does not exist", Toast.LENGTH_LONG).show()
         }
