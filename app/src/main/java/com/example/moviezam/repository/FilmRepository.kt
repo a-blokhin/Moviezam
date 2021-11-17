@@ -2,16 +2,10 @@ package com.example.moviezam.repository
 
 import android.content.res.Resources
 import com.example.moviezam.R
-import com.example.moviezam.models.Artist
-import com.example.moviezam.models.Film
-import com.example.moviezam.models.MoviezamApi
-import com.example.moviezam.models.Resource
+import com.example.moviezam.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.await
-import retrofit2.awaitResponse
+import retrofit2.*
 
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,6 +14,11 @@ class FilmRepository {
 
     suspend fun getFilmById(id: Int): Response<Film> {
         return moviezamApi.getFilmById(id)
+    }
+
+    suspend fun getFilmsByName(name: String, page: Int): List<FilmCard> = withContext(Dispatchers.IO) {
+        return@withContext moviezamApi.getFilmsByName(name, page).execute().body()
+            ?: emptyList()
     }
 
     companion object {
