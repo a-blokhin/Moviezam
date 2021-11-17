@@ -77,7 +77,7 @@ class ShazamFragment : BaseFragment(){
         songJson.addProperty("itunes", "")
         songJson.addProperty("spotify", "")
         songJson.addProperty("youtube", "")
-        songJson.addProperty("films", "[]")// надо сделать List<FilmCard> или не надо
+        songJson.addProperty("films", "")// надо сделать List<FilmCard> или не надо
         return songJson
     }
 
@@ -131,7 +131,7 @@ class ShazamFragment : BaseFragment(){
                             mListener.onListFragmentInteraction(songsPerPage[0].id, SongFragment())
                         } else{
                             Store.id = -1
-                            var songJson = generateJson(convertedObject)
+                            var songJson = generateJson(convertedObject).toString().dropLast(3)+"[]}"
                             Store.shazam = songJson
                             Toast.makeText(getActivity(), "песни нету в беке", Toast.LENGTH_SHORT).show()
                             Log.d(
