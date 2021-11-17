@@ -31,7 +31,7 @@ class FilmFragment : BaseFragment() {
     private var _binding: FragmentFilmBinding? = null
     private val viewModel = FilmViewModel()
     private var filmSaved: Film? = null
-    private var mListener: OnListFragmentInteractionListener? = null
+    private lateinit var mListener: OnListFragmentInteractionListener
 
     private var songsAdapter: SongCardAdapter? = null
     private var artistsAdapter: ArtistCardAdapter? = null
@@ -47,7 +47,9 @@ class FilmFragment : BaseFragment() {
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
                         binding.progressBar.visibility = View.GONE
-                        resource.data?.let { film -> setUpBasic(film) }
+                        resource.data?.let { film ->
+                            setUpBasic(film)
+                            filmSaved = film}
                     }
                     Resource.Status.ERROR -> {
                         binding.progressBar.visibility = View.GONE
@@ -87,9 +89,9 @@ class FilmFragment : BaseFragment() {
         binding.artists.layoutManager = LinearLayoutManager(this.context)
         binding.similar.layoutManager = LinearLayoutManager(this.context)
 
-        songsAdapter = mListener?.let { SongCardAdapter(it, listOf<SongCard>() ) }
-        artistsAdapter = mListener?.let { ArtistCardAdapter(it, listOf<ArtistCard>() ) }
-        filmsAdapter = mListener?.let { FilmCardAdapter(it, listOf<FilmCard>() ) }
+        songsAdapter = SongCardAdapter(mListener, listOf<SongCard>())
+        artistsAdapter = ArtistCardAdapter(mListener, listOf<ArtistCard>())
+        filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>())
 
         binding.songs.adapter = songsAdapter
         binding.artists.adapter = artistsAdapter
@@ -112,12 +114,12 @@ class FilmFragment : BaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpBasic(film: Film) {
-        filmSaved = film
         binding.filmImg.setImageURI(film.image)
         binding.filmTitle.text = film.name
         binding.filmTitle.isSelected = true
         val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-        binding.filmDesc.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
+        binding.filmDesc.text =
+            LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
         binding.filmDesc.isSelected = true
         songsAdapter!!.setData(film.songs)
         artistsAdapter!!.setData(film.artists)
@@ -135,6 +137,4 @@ class FilmFragment : BaseFragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
