@@ -6,9 +6,7 @@
     android:id="@+id/item_artist"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="8dp"
-
-    >
+    android:paddingVertical="8dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/avatarImage"
@@ -26,11 +24,8 @@
         fresco:roundBottomLeft="false"
         fresco:roundBottomRight="true"
         fresco:roundBottomStart="false"
+        fresco:roundTopStart="true"
         fresco:roundTopEnd="false"
-
-        fresco:roundTopLeft="true"
-        fresco:roundTopRight="false"
-        fresco:roundTopStart="false"
         fresco:roundingBorderWidth="1dp"
         tools:background="@color/teal_700" />
 

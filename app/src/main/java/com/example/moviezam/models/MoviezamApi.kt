@@ -21,4 +21,21 @@ interface MoviezamApi {
     suspend fun getSongById(
         @Query("id") id: Int
     ): Response<Song>
+
+    @GET("/song")
+    fun getSongCardById(
+        @Query("id") id: Int
+    ): Call<SongCard>
+
+    @GET("/find_song")
+    fun getSongsByName(
+        @Query("search") name: String,
+        @Query("page") pageNumber: Int
+    ): Call<List<SongCard>>
+
+    @GET("/find_artist")
+    fun getArtistsByName(
+        @Query("search") name: String,
+        @Query("page") pageNumber: Int
+    ): Call<List<ArtistCard>>
 }
