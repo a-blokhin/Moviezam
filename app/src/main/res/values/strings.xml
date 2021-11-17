@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Moviezam</string>
     <string name="musician">Musician</string>
+    <string name="films">Films</string>
+    <string name="artists">Artists</string>
     <string name="songs">Songs</string>
+    <string name="search">Search</string>
 </resources>

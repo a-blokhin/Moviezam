@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
                 .replace(R.id.container, shazamFragment, "SHAZAM")
                 .commit()
         }
+
     }
 
     override fun onListFragmentInteraction(id: Int, f: BaseFragment) {
