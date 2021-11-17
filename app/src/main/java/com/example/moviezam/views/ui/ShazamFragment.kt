@@ -128,6 +128,7 @@ class ShazamFragment : BaseFragment(){
                         var songsPerPage = repo.getSongsPageByName(req, 1)
                         if (songsPerPage.size > 0){
                             Store.id = songsPerPage[0].id
+                            mListener.onListFragmentInteraction(songsPerPage[0].id, SongFragment())
                         } else{
                             Store.id = -1
                             var songJson = generateJson(convertedObject)
@@ -139,8 +140,9 @@ class ShazamFragment : BaseFragment(){
                             Log.d(
                                 "MediaRecorderder", songJson.toString()
                             )
+                            mListener.onListFragmentInteraction(-1, SongFragment())
                         }
-                        mListener.onListFragmentInteraction(0, SongFragment())
+
 
 
                     } else {
