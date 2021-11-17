@@ -4,6 +4,7 @@ import com.example.moviezam.models.Artist
 import com.example.moviezam.models.Song
 import com.example.moviezam.models.MoviezamApi
 import com.example.moviezam.models.SongCard
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -20,6 +21,12 @@ class SongRepository {
 
     suspend fun getSongById(id: Int): Response<Song> {
         return moviezamApi.getSongById(id)
+    }
+
+//    @Deprecated("use method returning Response<SongCard> in future")
+    suspend fun getSongCardById(id: Int): SongCard = withContext(Dispatchers.IO) {
+        return@withContext moviezamApi.getSongCardById(id).execute().body()
+            ?: error("Not found song")
     }
 
     suspend fun getSongsPageByName(name: String, pageNum: Int): List<SongCard> = withContext(Dispatchers.IO) {

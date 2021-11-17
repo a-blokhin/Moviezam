@@ -25,7 +25,7 @@ class ArtistCardAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistCardViewHolder {
         val binding = ItemArtistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ArtistCardAdapter.ArtistCardViewHolder(binding, mListener)
+        return ArtistCardViewHolder(binding, mListener)
     }
 
     fun setData(artists: List<ArtistCard>) {

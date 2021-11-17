@@ -62,6 +62,7 @@ class FilmFragment : BaseFragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
         filmSaved?.let {

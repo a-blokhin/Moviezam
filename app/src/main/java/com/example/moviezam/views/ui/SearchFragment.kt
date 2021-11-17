@@ -141,7 +141,7 @@ class SearchFragment: Fragment() {
                 val popularSongsIds = listOf(13153, 176895, 104405, 105478, 28627, 160111, 77456)
 
                 for (id in popularSongsIds) {
-                    defaultSongs.add(repo.getSongById(id))
+                    defaultSongs.add(repo.getSongCardById(id))
                 }
             }
         }
