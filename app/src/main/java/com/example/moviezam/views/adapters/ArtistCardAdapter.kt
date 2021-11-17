@@ -6,16 +6,9 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.databinding.ItemArtistBinding
-import com.example.moviezam.databinding.ItemFilmBinding
-import com.example.moviezam.databinding.ItemSongBinding
 import com.example.moviezam.models.ArtistCard
-import com.example.moviezam.models.FilmCard
-import com.example.moviezam.models.SongCard
 import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment
-import com.example.moviezam.views.ui.FilmFragment
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class ArtistCardAdapter(
     private var mListener: BaseFragment.OnListFragmentInteractionListener,
@@ -25,7 +18,7 @@ class ArtistCardAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistCardViewHolder {
         val binding = ItemArtistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ArtistCardAdapter.ArtistCardViewHolder(binding, mListener)
+        return ArtistCardViewHolder(binding, mListener)
     }
 
     fun setData(artists: List<ArtistCard>) {
@@ -35,10 +28,10 @@ class ArtistCardAdapter(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ArtistCardViewHolder, position: Int) {
-        holder.bind(artists!![position])
+        holder.bind(artists[position])
     }
 
-    override fun getItemCount() = if (artists != null) artists!!.size else 0
+    override fun getItemCount() = artists.size
 
     class ArtistCardViewHolder(
         private val binding: ItemArtistBinding,

@@ -4,17 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.models.Artist
 import com.example.moviezam.models.Resource
-import com.example.moviezam.models.SongCard
 import com.example.moviezam.models.Store
 import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.views.adapters.SongCardAdapter
@@ -22,22 +19,24 @@ import java.lang.RuntimeException
 
 
 class ArtistFragment : BaseFragment() {
+    private lateinit var mListener: OnListFragmentInteractionListener
     private var _binding: FragmentArtistBinding? = null
     private val viewModel = ArtistViewModel()
+
     private var artistSaved: Artist? = null
-    private var mListener: OnListFragmentInteractionListener? = null
 
     private var adapter: SongCardAdapter? = null
-
     private val binding get() = _binding!!
 
     private fun setupObservers() {
-        viewModel.loadArtist(Store.id).observe(this, Observer {
+        viewModel.loadArtist(Store.id).observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
                         binding.progressBar.visibility = View.GONE
-                        resource.data?.let { artist -> setUpBasic(artist) }
+                        resource.data?.let { artist ->
+                            setUpBasic(artist)
+                            artistSaved = artist }
                     }
                     Resource.Status.ERROR -> {
                         binding.progressBar.visibility = View.GONE
@@ -50,7 +49,6 @@ class ArtistFragment : BaseFragment() {
             }
         })
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -72,16 +70,15 @@ class ArtistFragment : BaseFragment() {
     ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
         binding.songs.layoutManager = LinearLayoutManager(this.context)
-        adapter = mListener?.let { SongCardAdapter(it, listOf<SongCard>() ) }
+        adapter = SongCardAdapter(mListener, listOf())
         binding.songs.adapter = adapter
-
 
         return binding.root
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mListener = if (context is OnListFragmentInteractionListener) {
+        this.mListener = if (context is OnListFragmentInteractionListener) {
             context
         } else {
             throw RuntimeException(
@@ -91,7 +88,6 @@ class ArtistFragment : BaseFragment() {
     }
 
     private fun setUpBasic(artist: Artist) {
-        artistSaved = artist
 
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
