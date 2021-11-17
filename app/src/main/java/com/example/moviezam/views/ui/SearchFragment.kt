@@ -46,7 +46,8 @@ class SearchFragment: BaseFragment() {
     private var filmCardAdapter: SongCardAdapter?= null
 
     private var mListener: BaseFragment.OnListFragmentInteractionListener? = null
-    private var job: Job? = null
+    private var songJob: Job? = null
+    private var artistJob: Job? = null
 
 
     override fun onCreateView(
@@ -67,9 +68,9 @@ class SearchFragment: BaseFragment() {
             songCardAdapter?.notifyDataSetChanged()
             songLoadingInfo = LoadingInfo(1, text, true)
         }
-        job?.cancel()
+        songJob?.cancel()
 
-        job = CoroutineScope(Dispatchers.IO).launch {
+        songJob = CoroutineScope(Dispatchers.IO).launch {
             val loadedList = songsViewModel.loadSongsByPrefix(text, songLoadingInfo.currPageNumber)
 
             if (loadedList.isEmpty()) {
@@ -93,9 +94,9 @@ class SearchFragment: BaseFragment() {
             artistCardAdapter?.notifyDataSetChanged()
             artistLoadingInfo = LoadingInfo(1, text, true)
         }
-        job?.cancel()
+        artistJob?.cancel()
 
-        job = CoroutineScope(Dispatchers.IO).launch {
+        artistJob = CoroutineScope(Dispatchers.IO).launch {
             val loadedList =
                 artistsViewModel.loadArtistsByPrefix(text, artistLoadingInfo.currPageNumber)
 
