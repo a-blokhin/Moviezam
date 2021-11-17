@@ -19,7 +19,7 @@ class ArtistViewModel {
     // TODO
     private val repo = ArtistRepository()
     var job: Job? = null
-    val artistList = mutableListOf<ArtistCard>()
+    val lastPageLoaded = 1
 
     fun loadArtist(id: Int) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
@@ -31,34 +31,15 @@ class ArtistViewModel {
         }
     }
 
-    suspend fun loadArtistsByPrefix(prefix: String, adapter: ArtistCardAdapter, adapterList: MutableList<ArtistCard>) {
+    suspend fun loadArtistsByPrefix(prefix: String, pageNum: Int): MutableList<ArtistCard> {
         job?.cancel()
+        var artistsPerPage: MutableList<ArtistCard> = emptyList<ArtistCard>().toMutableList()
 
         job = CoroutineScope(Dispatchers.IO).launch {
-            adapterList.clear()
-            val update = CoroutineScope(Dispatchers.Main).launch {
-                adapter.notifyDataSetChanged()
-            }
-            update.join()
-
-            var pageNum = 1
-            var artistsPerPage = repo.getArtistsByName(prefix, pageNum)
-
-            val loading = launch {
-                while (artistsPerPage.isNotEmpty()) {
-                    pageNum++
-                    val prevListSize = adapterList.size
-                    adapterList.addAll(artistsPerPage)
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        adapter.notifyItemRangeInserted(prevListSize, artistsPerPage.size)
-                    }
-
-                    artistsPerPage = repo.getArtistsByName(prefix, pageNum)
-                }
-            }
-            loading.join()
+            artistsPerPage = repo.getArtistsByName(prefix, pageNum) as MutableList<ArtistCard>
         }
         job!!.join()
+
+        return artistsPerPage
     }
 }

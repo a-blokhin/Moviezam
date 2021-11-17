@@ -10,9 +10,11 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentSearchBinding
 import com.example.moviezam.models.ArtistCard
+import com.example.moviezam.models.LoadingInfo
 import com.example.moviezam.models.SongCard
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ArtistViewModel
@@ -31,8 +33,10 @@ class SearchFragment: Fragment() {
     private val songsViewModel = SongsViewModel()
     private val artistsViewModel = ArtistViewModel()
 
-    private var songList: MutableList<SongCard> = setDefaultSongs()
+    private var songList: MutableList<SongCard> = mutableListOf()
+    private var songLoadingInfo = LoadingInfo()
     private var artistList: MutableList<ArtistCard> = mutableListOf()
+    private var artistLoadingInfo = LoadingInfo()
     //TODO: заглушка, потом поменять на карточки фильмов
     private var filmList: MutableList<SongCard> = mutableListOf()
 
@@ -42,6 +46,7 @@ class SearchFragment: Fragment() {
     private var filmCardAdapter: SongCardAdapter?= null
 
     private var mListener: BaseFragment.OnListFragmentInteractionListener? = null
+    private var job: Job? = null
 
 
     override fun onCreateView(
@@ -55,14 +60,55 @@ class SearchFragment: Fragment() {
     }
 
     private fun uploadSongList(text: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            songsViewModel.loadSongsByPrefix(text, songCardAdapter!!, songList)
+        if (!songLoadingInfo.hasPagesToLoad) return
+
+        if (text != songLoadingInfo.currSearchText) {
+            songList.clear()
+            songCardAdapter?.notifyDataSetChanged()
+            songLoadingInfo = LoadingInfo(1, text, true)
+        }
+        job?.cancel()
+
+        job = CoroutineScope(Dispatchers.IO).launch {
+            var loadedList = songsViewModel.loadSongsByPrefix(text, songLoadingInfo.currPageNumber)
+
+            if (loadedList.isEmpty()) {
+                songLoadingInfo.hasPagesToLoad = false
+            } else {
+                songList.addAll(loadedList)
+                val update = CoroutineScope(Dispatchers.Main).launch {
+                    songCardAdapter?.notifyDataSetChanged()
+                }
+                update.join()
+            }
+            songLoadingInfo.currPageNumber++
         }
     }
 
     private fun uploadArtistList(text: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            artistsViewModel.loadArtistsByPrefix(text, artistCardAdapter!!, artistList)
+        if (!artistLoadingInfo.hasPagesToLoad) return
+
+        if (text != artistLoadingInfo.currSearchText) {
+            artistList.clear()
+            artistCardAdapter?.notifyDataSetChanged()
+            artistLoadingInfo = LoadingInfo(1, text, true)
+        }
+        job?.cancel()
+
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val loadedList =
+                artistsViewModel.loadArtistsByPrefix(text, artistLoadingInfo.currPageNumber)
+
+            if (loadedList.isEmpty()) {
+                artistLoadingInfo.hasPagesToLoad = false
+            } else {
+                artistList.addAll(loadedList)
+                val update = CoroutineScope(Dispatchers.Main).launch {
+                    artistCardAdapter?.notifyDataSetChanged()
+                }
+                update.join()
+            }
+            artistLoadingInfo.currPageNumber++
         }
     }
 
@@ -77,7 +123,26 @@ class SearchFragment: Fragment() {
 
         binding.list.adapter = songCardAdapter
 
-        binding.list.layoutManager = LinearLayoutManager(this.context)
+        val lm = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+        binding.list.layoutManager = lm
+        binding.list.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    val totalItemCount = lm.itemCount
+                    val lastVisibleItem = lm.findLastVisibleItemPosition()
+                    val posDiffToLoad = 3
+
+                    if (lastVisibleItem + posDiffToLoad < totalItemCount) return
+
+                    when(binding.buttonView.checkedRadioButtonId) {
+                        binding.songButton.id -> uploadSongList(songLoadingInfo.currSearchText)
+                        binding.artistButton.id -> uploadArtistList(artistLoadingInfo.currSearchText)
+                        binding.filmButton.id -> {}
+                    }
+                }
+            }
+        })
+
         binding.list.addItemDecoration(
             DividerItemDecoration(
                 this.context,
@@ -131,20 +196,5 @@ class SearchFragment: Fragment() {
                 "$context must implement OnListFragmentInteractionListener"
             )
         }
-    }
-
-    private fun setDefaultSongs() : MutableList<SongCard> {
-        val defaultSongs = mutableListOf<SongCard>()
-        runBlocking {
-            withContext(Dispatchers.IO) {
-                val repo = SongRepository()
-                val popularSongsIds = listOf(13153, 176895, 104405, 105478, 28627, 160111, 77456)
-
-                for (id in popularSongsIds) {
-                    defaultSongs.add(repo.getSongCardById(id))
-                }
-            }
-        }
-        return defaultSongs
     }
 }

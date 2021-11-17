@@ -1,5 +1,7 @@
 package com.example.moviezam.repository
 
+import android.content.res.Resources
+import com.example.moviezam.R
 import com.example.moviezam.models.Artist
 import com.example.moviezam.models.Film
 import com.example.moviezam.models.MoviezamApi
@@ -14,15 +16,16 @@ import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
 
 class FilmRepository {
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("http://95.163.180.8:8081")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
     private val moviezamApi = retrofit.create(MoviezamApi::class.java)
 
     suspend fun getFilmById(id: Int): Response<Film> {
         return moviezamApi.getFilmById(id)
     }
 
+    companion object {
+        private val retrofit = Retrofit.Builder()
+            .baseUrl("http://95.163.180.8:8081")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 }
