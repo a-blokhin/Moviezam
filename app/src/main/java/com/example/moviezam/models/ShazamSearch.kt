@@ -24,11 +24,14 @@ import java.util.*
 class ShazamSearch {
     interface APIService {
         @POST("/songs/detect/")
-        @Headers("content-type: text/plain",
+        @Headers(
+            "content-type: text/plain",
             "x-rapidapi-host: shazam.p.rapidapi.com",
-            "x-rapidapi-key: 499ccd8ae9mshcca85b2e34a22a6p1cff90jsnaf15cc689700")
-        suspend fun createEmployee(@Body requestBody: RequestBody): Response<ResponseBody>
+            "x-rapidapi-key: 499ccd8ae9mshcca85b2e34a22a6p1cff90jsnaf15cc689700"
+        )
+        suspend fun ShazamRequest(@Body requestBody: RequestBody): Response<ResponseBody>
     }
+
     private var mediaRecorder: WavAudioRecorder? = null
 
     suspend fun record(output: String, dir: String) {
@@ -46,15 +49,12 @@ class ShazamSearch {
         Log.d("MediaRecorder", mediaRecorder!!.getState().toString())
         try {
             Log.d("MediaRecorder", "Recording starting!")
-
             mediaRecorder?.prepare()
             mediaRecorder?.start()
             delay(4500)
             mediaRecorder?.stop()
             mediaRecorder?.reset()
             mediaRecorder?.release()
-            mediaRecorder = null
-
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         } catch (e: IOException) {
@@ -64,7 +64,7 @@ class ShazamSearch {
 
     @SuppressLint("RestrictedApi")
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun search(output: String, dir: String):String {
+    suspend fun search(output: String, dir: String): String {
 
         record(output, dir)
 
@@ -83,10 +83,8 @@ class ShazamSearch {
         // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
         val requestBody: RequestBody = b64.toRequestBody("text/plain".toMediaTypeOrNull())
         return withContext(Dispatchers.IO) {
-            return@withContext service.createEmployee(requestBody).body()?.string().toString()
+            return@withContext service.ShazamRequest(requestBody).body()?.string().toString()
         }
-
-
 
 
     }
