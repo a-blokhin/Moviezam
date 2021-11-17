@@ -28,7 +28,7 @@ class SongFragment : BaseFragment() {
     private var _binding: FragmentSongBinding? = null
     private val viewModel = SongViewModel()
     private var songSaved: Song? = null
-    private var mListener: OnListFragmentInteractionListener? = null
+    private lateinit var mListener: OnListFragmentInteractionListener
 
     private var filmsAdapter: FilmCardAdapter? = null
 
@@ -41,7 +41,9 @@ class SongFragment : BaseFragment() {
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
                         binding.progressBar.visibility = View.GONE
-                        resource.data?.let { song -> setUpBasic(song) }
+                        resource.data?.let { song ->
+                            setUpBasic(song)
+                            songSaved = song}
                     }
                     Resource.Status.ERROR -> {
                         binding.progressBar.visibility = View.GONE
@@ -78,7 +80,7 @@ class SongFragment : BaseFragment() {
 
         binding.films.layoutManager = LinearLayoutManager(this.context)
 
-        filmsAdapter = mListener?.let { FilmCardAdapter(it, listOf<FilmCard>() ) }
+        filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>() )
 
         binding.films.adapter = filmsAdapter
 
@@ -98,7 +100,6 @@ class SongFragment : BaseFragment() {
 
 
     private fun setUpBasic(song: Song) {
-        songSaved = song
         binding.songImg.setImageURI(song.externalArtUrl)
         binding.songTitle.text = song.name
         binding.songTitle.isSelected = true
