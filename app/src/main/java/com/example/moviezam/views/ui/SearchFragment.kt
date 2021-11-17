@@ -70,7 +70,7 @@ class SearchFragment: Fragment() {
         job?.cancel()
 
         job = CoroutineScope(Dispatchers.IO).launch {
-            var loadedList = songsViewModel.loadSongsByPrefix(text, songLoadingInfo.currPageNumber)
+            val loadedList = songsViewModel.loadSongsByPrefix(text, songLoadingInfo.currPageNumber)
 
             if (loadedList.isEmpty()) {
                 songLoadingInfo.hasPagesToLoad = false
