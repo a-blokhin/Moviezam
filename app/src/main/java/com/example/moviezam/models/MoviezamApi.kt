@@ -3,6 +3,7 @@ package com.example.moviezam.models
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MoviezamApi {
@@ -11,10 +12,15 @@ interface MoviezamApi {
         @Query("id") id: Int
     ): Response<Artist>
 
-    @GET("/song")
-    fun getSongById(
+    @GET("/film")
+    suspend fun getFilmById(
         @Query("id") id: Int
-    ): Call<SongCard>
+    ): Response<Film>
+
+    @GET("/song")
+    suspend fun getSongById(
+        @Query("id") id: Int
+    ): Response<Song>
 
     @GET("/find_song")
     fun getSongsByName(

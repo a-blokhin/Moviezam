@@ -9,18 +9,18 @@ import com.facebook.drawee.backends.pipeline.Fresco
 
 
 class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteractionListener {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fresco.initialize(this)
         setContentView(R.layout.activity_main)
 
-        val f: Fragment = SearchFragment()
-        val bundle = Bundle()
-        f.arguments = bundle
+        val f: Fragment = FilmFragment()
+        Store.id = 1111
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, f)
+                .replace(R.id.container, f, "FILM")
                 .commitAllowingStateLoss()
         }
     }

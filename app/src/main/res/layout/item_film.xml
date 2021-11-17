@@ -3,12 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_artist"
+    android:id="@+id/item_film"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="8dp"
-
-    >
+    android:paddingVertical="8dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/avatarImage"
@@ -28,6 +26,7 @@
         fresco:roundBottomStart="false"
         fresco:roundTopEnd="false"
 
+
         fresco:roundTopLeft="true"
         fresco:roundTopRight="false"
         fresco:roundTopStart="false"
@@ -35,7 +34,7 @@
         tools:background="@color/teal_700" />
 
     <TextView
-        android:id="@+id/artistName"
+        android:id="@+id/filmName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -49,12 +48,30 @@
         android:textColor="#18191F"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/avatarImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/avatarImage"
         app:layout_constraintTop_toTopOf="@+id/avatarImage"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="sdgfsdgsdfsdfgsdfgsdfgdsdfsdfsdfsdfsdfs" />
 
+    <TextView
+        android:id="@+id/releaseDate"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="#474A57"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/avatarImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/avatarImage"
+        app:layout_constraintTop_toBottomOf="@+id/filmName"
+        tools:text="sdgfsdgsdfsdfgsdfgsdfgxfggdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgfdgdfgdfgdfgdfdfs" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

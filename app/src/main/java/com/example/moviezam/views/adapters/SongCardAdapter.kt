@@ -8,6 +8,7 @@ import com.example.moviezam.models.Artist
 import com.example.moviezam.models.SongCard
 import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment.OnListFragmentInteractionListener
+import com.example.moviezam.views.ui.SongFragment
 
 
 class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, private var songs: List<SongCard>) : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>() {
@@ -32,19 +33,21 @@ class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, 
         private val binding: ItemSongBinding,
         private var mListener: OnListFragmentInteractionListener
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(song: SongCard) {
             binding.songName.text = song.name
-            binding.artistName.text = song.artist
-
-            if (song.image == "")
-                binding.avatarImage
-                    .setImageURI("https://i.pinimg.com/originals/dc/5d/ab/dc5dabf254765cc40a460496aeba681a.jpg")
-            else
+            binding.songName.isSelected = true
+            binding.artistName.text = if (song.album != "") song.artist.plus(" - ").plus(song.album) else song.artist
+            binding.artistName.isSelected = true
+            if (song.image == "" || song.image == null) {
+                binding.avatarImage.setImageURI("https://image.shutterstock.com/image-vector/music-icon-symbol-simple-design-260nw-1934430458.jpg")
+            } else {
                 binding.avatarImage.setImageURI(song.image)
-
+            }
             binding.itemSong.setOnClickListener{
-                mListener.onListFragmentInteraction(7130, ArtistFragment())
+                mListener.onListFragmentInteraction(song.id, SongFragment())
             }
         }
     }
+
 }
