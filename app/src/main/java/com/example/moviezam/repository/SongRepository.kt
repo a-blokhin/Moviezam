@@ -1,8 +1,8 @@
 package com.example.moviezam.repository
 
+import com.example.moviezam.models.Artist
 import com.example.moviezam.models.Song
 import com.example.moviezam.models.MoviezamApi
-import com.example.moviezam.models.SongCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response

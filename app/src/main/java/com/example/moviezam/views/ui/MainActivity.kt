@@ -18,13 +18,13 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val shazamFragment: Fragment = ShazamFragment()
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, shazamFragment, "SHAZAM")
                 .commit()
         }
-    }
 
     override fun onListFragmentInteraction(id: Int, f: BaseFragment) {
         Store.id = id
