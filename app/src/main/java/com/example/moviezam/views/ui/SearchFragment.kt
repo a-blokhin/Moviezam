@@ -26,7 +26,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.lang.RuntimeException
 
-class SearchFragment: Fragment() {
+class SearchFragment: BaseFragment() {
     private var _binding : FragmentSearchBinding? = null
     private val binding get() = _binding!!
 

@@ -2,6 +2,7 @@ package com.example.moviezam.views.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -20,22 +21,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.R
 import com.example.moviezam.databinding.ActivityMainBinding
+import com.example.moviezam.databinding.FragmentShazamBinding
 //import com.example.moviezam.models.SongCard
 import com.example.moviezam.models.Store
+import com.example.moviezam.repository.SongRepository
 //import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ShazamViewModel
+import com.example.moviezam.views.adapters.SongCardAdapter
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
+import java.lang.RuntimeException
 
-
-class ShazamFragment : Fragment() {
-    private var _binding: ActivityMainBinding? = null
+class ShazamFragment : BaseFragment(){
+    private var _binding: FragmentShazamBinding? = null
     private val viewModel = ShazamViewModel()
     private var song_name: String? = null
     var state = true
+    private var songCardAdapter: SongCardAdapter? = null
+    private lateinit var mListener: OnListFragmentInteractionListener
     private val binding get() = _binding!!
-    //private val repo = SongRepository()
+    private val repo = SongRepository()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -45,7 +51,7 @@ class ShazamFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = ActivityMainBinding.inflate(inflater, container, false)
+        _binding = FragmentShazamBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -118,7 +124,7 @@ class ShazamFragment : Fragment() {
                         Log.d(
                             "MediaRecorderder", req
                         )
-                        /*
+
                         var songsPerPage = repo.getSongsPageByName(req, 1)
                         if (songsPerPage.size > 0){
                             Store.id = songsPerPage[0].id
@@ -134,12 +140,8 @@ class ShazamFragment : Fragment() {
                                 "MediaRecorderder", songJson.toString()
                             )
                         }
-                        val nextFrag= SongFragment()
-                        getActivity()?.getSupportFragmentManager()?.beginTransaction()
-                            ?.replace(R.id.fragment_song, nextFrag, "findThisFragment")
-                            ?.addToBackStack(null)
-                            ?.commit()
-                         */
+                        mListener.onListFragmentInteraction(0, SongFragment())
+
 
                     } else {
                         Toast.makeText(getActivity(), "Песня не нашлась", Toast.LENGTH_LONG)
@@ -158,20 +160,25 @@ class ShazamFragment : Fragment() {
         super.onStart()
         //раскоментировать это и нажимать на значок лупы второй сверху строки поиска
 
-        /*
         binding.searchView.setOnClickListener {
-            val fragment2 = SearchFragment()
-            getActivity()?.getSupportFragmentManager()?.beginTransaction()
-                                ?.replace(R.id.container, fragment2, "findThisFragment")
-                                ?.addToBackStack(null)
-                                ?.commit()}
-        */
+            mListener.onListFragmentInteraction(0, SearchFragment())
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.fab.setOnClickListener {
                 search()
             }
         }
 
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mListener = if (context is OnListFragmentInteractionListener) {
+            context
+        } else {
+            throw RuntimeException(
+                "$context must implement OnListFragmentInteractionListener"
+            )
+        }
     }
 
     override fun onDestroyView() {

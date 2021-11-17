@@ -1,13 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#60f"
+    android:id="@+id/container"
+    tools:context="com.example.moviezam.views.ui.ShazamFragment"
+    android:orientation="vertical">
 
-    tools:context=".views.ui.MainActivity"
 
-    />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/searchview_background2"
+        android:iconifiedByDefault="false"
+        android:queryBackground="@android:color/transparent"
+        android:queryHint="Search" />
+
+
+    <ImageButton
+        android:id="@+id/fadb"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/roundedbutton"
+        app:backgroundTint="#ffc500"
+
+        app:iconGravity="textStart"
+        app:iconTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.50"
+        android:contentDescription="@string/app_name"/>
+
+    <ImageButton
+        android:id="@+id/fab"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/microphone100"
+        app:iconGravity="textStart"
+        app:iconTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.30"
+        android:contentDescription="@string/app_name"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
