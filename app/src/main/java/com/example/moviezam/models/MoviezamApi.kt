@@ -38,4 +38,10 @@ interface MoviezamApi {
         @Query("search") name: String,
         @Query("page") pageNumber: Int
     ): Call<List<ArtistCard>>
+
+    @GET("/find_film")
+    fun getFilmsByName(
+        @Query("search") name: String,
+        @Query("page") pageNumber: Int
+    ): Call<List<FilmCard>>
 }
