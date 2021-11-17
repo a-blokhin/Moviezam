@@ -6,8 +6,7 @@
 
 Состав команды:
 
-1. [Дмитрий Мандельштам](https://github.com/mandelshtamd)
-2. [Антон Блохин](https://github.com/a-blokhin)
-3. [Антон Блохин](https://github.com/a-blokhin)
+1. [Антон Блохин](https://github.com/a-blokhin)
+2. [Дмитрий Мандельштам](https://github.com/mandelshtamd)
 3. [Анастасия Морозова](https://github.com/moroz-matros)
 4. [Максим Живолуп](https://github.com/PurpleLime)
