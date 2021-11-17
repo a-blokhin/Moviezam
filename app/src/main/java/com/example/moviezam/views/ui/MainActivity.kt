@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.moviezam.R
-import com.example.moviezam.models.SongCard
 import com.example.moviezam.models.Store
 import com.google.gson.Gson
 import java.nio.file.Paths.get
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
                 .replace(R.id.container, shazamFragment, "SHAZAM")
                 .commit()
         }
-
+    }
     override fun onListFragmentInteraction(id: Int, f: BaseFragment) {
         Store.id = id
         supportFragmentManager

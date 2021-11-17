@@ -20,9 +20,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.R
 import com.example.moviezam.databinding.ActivityMainBinding
-import com.example.moviezam.models.SongCard
+//import com.example.moviezam.models.SongCard
 import com.example.moviezam.models.Store
-import com.example.moviezam.repository.SongRepository
+//import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ShazamViewModel
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -35,7 +35,7 @@ class ShazamFragment : Fragment() {
     private var song_name: String? = null
     var state = true
     private val binding get() = _binding!!
-    private val repo = SongRepository()
+    //private val repo = SongRepository()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -118,7 +118,7 @@ class ShazamFragment : Fragment() {
                         Log.d(
                             "MediaRecorderder", req
                         )
-
+                        /*
                         var songsPerPage = repo.getSongsPageByName(req, 1)
                         if (songsPerPage.size > 0){
                             Store.id = songsPerPage[0].id
@@ -134,9 +134,6 @@ class ShazamFragment : Fragment() {
                                 "MediaRecorderder", songJson.toString()
                             )
                         }
-                        //Toast.makeText(getActivity(), songsPerPage.toString(), Toast.LENGTH_SHORT).show()
-                        //Toast.makeText(getActivity(), songsPerPage[0].id.toString(), Toast.LENGTH_SHORT).show()
-                        /*
                         val nextFrag= SongFragment()
                         getActivity()?.getSupportFragmentManager()?.beginTransaction()
                             ?.replace(R.id.fragment_song, nextFrag, "findThisFragment")
