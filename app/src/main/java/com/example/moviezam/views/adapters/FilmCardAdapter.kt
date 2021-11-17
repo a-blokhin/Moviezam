@@ -13,8 +13,10 @@ import com.example.moviezam.models.FilmCard
 import com.example.moviezam.models.SongCard
 import com.example.moviezam.views.ui.BaseFragment
 import com.example.moviezam.views.ui.FilmFragment
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteractionListener, private var films: List<FilmCard>) : RecyclerView.Adapter<FilmCardAdapter.FilmCardViewHolder>() {
 
@@ -29,7 +31,6 @@ class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteract
         notifyDataSetChanged()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: FilmCardViewHolder, position: Int) {
         holder.bind(films!![position])
     }
@@ -41,7 +42,6 @@ class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteract
         private var mListener: BaseFragment.OnListFragmentInteractionListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(film: FilmCard) {
             binding.filmName.text = film.name
             binding.filmName.isSelected = true
@@ -50,8 +50,10 @@ class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteract
             } else {
                 binding.avatarImage.setImageURI(film.image)
             }
-            val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-            binding.releaseDate.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
+            val parser =  SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.US)
+            binding.releaseDate.text = formatter.format(parser.parse(film?.releaseDate?.substringBefore(' ')))
+
             binding.releaseDate.isSelected = true
             binding.itemFilm.setOnClickListener{
                 mListener.onListFragmentInteraction(film.id, FilmFragment())

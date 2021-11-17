@@ -23,8 +23,10 @@ import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
 import java.lang.RuntimeException
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class FilmFragment : BaseFragment() {
@@ -40,7 +42,6 @@ class FilmFragment : BaseFragment() {
     private val binding get() = _binding!!
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupObservers() {
         viewModel.loadFilm(Store.id).observe(this, Observer {
             it?.let { resource ->
@@ -64,7 +65,6 @@ class FilmFragment : BaseFragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
         filmSaved?.let {
@@ -112,14 +112,15 @@ class FilmFragment : BaseFragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpBasic(film: Film) {
         binding.filmImg.setImageURI(film.image)
         binding.filmTitle.text = film.name
         binding.filmTitle.isSelected = true
-        val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-        binding.filmDesc.text =
-            LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
+
+        val parser =  SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.US)
+        binding.filmDesc.text = formatter.format(parser.parse(film?.releaseDate?.substringBefore(' ')))
+
         binding.filmDesc.isSelected = true
         songsAdapter!!.setData(film.songs)
         artistsAdapter!!.setData(film.artists)

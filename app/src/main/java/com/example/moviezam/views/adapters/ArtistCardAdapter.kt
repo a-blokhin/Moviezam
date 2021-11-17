@@ -26,7 +26,6 @@ class ArtistCardAdapter(
         notifyDataSetChanged()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ArtistCardViewHolder, position: Int) {
         holder.bind(artists[position])
     }
@@ -38,7 +37,6 @@ class ArtistCardAdapter(
         private var mListener: BaseFragment.OnListFragmentInteractionListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(artist: ArtistCard) {
             binding.artistName.text = artist.name
             binding.artistName.isSelected = true

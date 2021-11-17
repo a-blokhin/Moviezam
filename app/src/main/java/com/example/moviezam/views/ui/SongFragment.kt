@@ -109,7 +109,12 @@ class SongFragment : BaseFragment() {
         binding.songTitle.isSelected = true
         binding.songDesc.text = if (song.albumName != "") song.artist.plus(" - ").plus(song.albumName) else song.artist
         binding.songDesc.isSelected = true
-        filmsAdapter!!.setData(song.films)
+        if (song.films != null && song.films.isNotEmpty()) {
+            filmsAdapter!!.setData(song.films)
+        } else {
+            binding.filmsSection.visibility = View.GONE
+            binding.films.visibility = View.GONE
+        }
 
     }
 
