@@ -19,7 +19,6 @@ class ArtistViewModel {
     // TODO
     private val repo = ArtistRepository()
     var job: Job? = null
-    val lastPageLoaded = 1
 
     fun loadArtist(id: Int) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
@@ -33,13 +32,13 @@ class ArtistViewModel {
 
     suspend fun loadArtistsByPrefix(prefix: String, pageNum: Int): MutableList<ArtistCard> {
         job?.cancel()
-        var artistsPerPage: MutableList<ArtistCard> = emptyList<ArtistCard>().toMutableList()
+        var artistsPerPage: List<ArtistCard> = emptyList()
 
         job = CoroutineScope(Dispatchers.IO).launch {
-            artistsPerPage = repo.getArtistsByName(prefix, pageNum) as MutableList<ArtistCard>
+            artistsPerPage = repo.getArtistsByName(prefix, pageNum)
         }
         job!!.join()
 
-        return artistsPerPage
+        return artistsPerPage.toMutableList()
     }
 }

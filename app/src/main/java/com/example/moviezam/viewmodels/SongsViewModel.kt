@@ -13,16 +13,17 @@ class SongsViewModel : ViewModel() {
     private val repo = SongRepository()
     private var job: Job? = null
 
+
     suspend fun loadSongsByPrefix(prefix: String, pageNum: Int): MutableList<SongCard> {
         job?.cancel()
-        var songsPerPage: MutableList<SongCard> = emptyList<SongCard>().toMutableList()
+        var songsPerPage: List<SongCard> = emptyList()
 
         job = CoroutineScope(Dispatchers.IO).launch {
-            songsPerPage = repo.getSongsPageByName(prefix, pageNum) as MutableList<SongCard>
+            songsPerPage = repo.getSongsPageByName(prefix, pageNum)
         }
         job!!.join()
 
-        return songsPerPage
+        return songsPerPage.toMutableList()
     }
 
     override fun onCleared() {
