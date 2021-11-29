@@ -33,17 +33,17 @@ class ArtistFragment : BaseFragment() {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        binding.progressBar.visibility = View.GONE
+                        //binding.progressBar.visibility = View.GONE
                         resource.data?.let { artist ->
                             setUpBasic(artist)
                             artistSaved = artist }
                     }
                     Resource.Status.ERROR -> {
-                        binding.progressBar.visibility = View.GONE
+                        //binding.progressBar.visibility = View.GONE
                         Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
                     }
                     Resource.Status.LOADING -> {
-                        binding.progressBar.visibility = View.VISIBLE
+                      //  binding.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
@@ -73,6 +73,7 @@ class ArtistFragment : BaseFragment() {
         adapter = SongCardAdapter(mListener, listOf())
         binding.songs.adapter = adapter
 
+
         return binding.root
     }
 
@@ -90,11 +91,14 @@ class ArtistFragment : BaseFragment() {
     private fun setUpBasic(artist: Artist) {
 
         binding.image.setImageURI(artist.image)
-        binding.artistName.text = artist.name
+        binding.collapsingToolbar.title = artist.name
+
+        //binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
 
+        /*
         if (artist.urlOfficial != "") {
-            binding.official.setOnClickListener {
+            //binding.official.setOnClickListener {
                 goToUrl(artist.urlOfficial)
             }
         } else {
@@ -140,6 +144,8 @@ class ArtistFragment : BaseFragment() {
         } else {
             binding.wikipedia.visibility = View.GONE
         }
+
+         */
     }
 
     private fun goToUrl(url: String) {
