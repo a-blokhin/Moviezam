@@ -22,8 +22,6 @@
             android:fitsSystemWindows="true"
             android:background="@color/black"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <com.facebook.drawee.view.SimpleDraweeView
@@ -37,8 +35,6 @@
                 app:placeholderImage="@drawable/musician_default"
                 fresco:placeholderImageScaleType="centerCrop"
                 />
-
-
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
