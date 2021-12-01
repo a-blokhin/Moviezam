@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.models.Artist
@@ -16,6 +18,11 @@ import com.example.moviezam.models.Store
 import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.views.adapters.SongCardAdapter
 import java.lang.RuntimeException
+import androidx.recyclerview.widget.RecyclerView
+
+
+
+
 
 
 class ArtistFragment : BaseFragment() {
@@ -27,6 +34,8 @@ class ArtistFragment : BaseFragment() {
 
     private var adapter: SongCardAdapter? = null
     private val binding get() = _binding!!
+
+
 
     private fun setupObservers() {
         viewModel.loadArtist(Store.id).observe(this, {
@@ -69,10 +78,9 @@ class ArtistFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
-        binding.songs.layoutManager = LinearLayoutManager(this.context)
+        binding.songs.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
         adapter = SongCardAdapter(mListener, listOf())
         binding.songs.adapter = adapter
-
 
         return binding.root
     }
@@ -91,14 +99,13 @@ class ArtistFragment : BaseFragment() {
     private fun setUpBasic(artist: Artist) {
 
         binding.image.setImageURI(artist.image)
-        binding.collapsingToolbar.title = artist.name
-
-        //binding.artistName.text = artist.name
+        binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
+        binding.songs.addOnScrollListener(recyclerViewOnScrollListener)
 
-        /*
+
         if (artist.urlOfficial != "") {
-            //binding.official.setOnClickListener {
+            binding.official.setOnClickListener {
                 goToUrl(artist.urlOfficial)
             }
         } else {
@@ -144,9 +151,52 @@ class ArtistFragment : BaseFragment() {
         } else {
             binding.wikipedia.visibility = View.GONE
         }
-
-         */
+        setArrows()
     }
+
+
+    private fun setArrows(){
+        binding.rightArrow.setOnClickListener {
+            val next = (binding.songs.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() + 1
+            if (next < adapter!!.itemCount){
+                binding.songs.smoothScrollToPosition(next)
+            }
+        }
+
+        binding.leftArrow.setOnClickListener {
+            val prev = (binding.songs.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() - 1
+            if (prev > 0){
+                binding.songs.smoothScrollToPosition(prev)
+            }
+        }
+
+
+
+    }
+
+    private val recyclerViewOnScrollListener: RecyclerView.OnScrollListener =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val lastNum: Int = (binding.songs.layoutManager as LinearLayoutManager).itemCount-1
+                val firstItem: Int =
+                    (binding.songs.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                val lastItem = (binding.songs.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+
+                if ((binding.rightArrow.visibility == View.GONE) && (lastItem != lastNum)){
+                    binding.rightArrow.visibility = View.VISIBLE
+                }
+                if ((binding.leftArrow.visibility == View.GONE) && (firstItem != 0)){
+                    binding.leftArrow.visibility = View.VISIBLE
+                }
+
+                if (lastItem == lastNum) {
+                    binding.rightArrow.visibility = View.GONE
+                } else if (firstItem == 0) {
+                    binding.leftArrow.visibility = View.GONE
+                }
+            }
+        }
 
     private fun goToUrl(url: String) {
         val uriUrl: Uri = Uri.parse(url)
@@ -158,6 +208,9 @@ class ArtistFragment : BaseFragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
+
 
 
 }
