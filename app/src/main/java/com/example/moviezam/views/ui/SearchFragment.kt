@@ -10,10 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.databinding.FragmentSearchBinding
-import com.example.moviezam.models.ArtistCard
-import com.example.moviezam.models.FilmCard
-import com.example.moviezam.models.LoadingInfo
-import com.example.moviezam.models.SongCard
+import com.example.moviezam.models.*
 import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.viewmodels.SongsViewModel
