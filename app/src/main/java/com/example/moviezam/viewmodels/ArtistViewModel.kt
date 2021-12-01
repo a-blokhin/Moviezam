@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class ArtistViewModel {
 
-    // TODO
     private val repo = ArtistRepository()
     var job: Job? = null
 

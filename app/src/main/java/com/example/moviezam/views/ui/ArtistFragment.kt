@@ -97,11 +97,11 @@ class ArtistFragment : BaseFragment() {
     }
 
     private fun setUpBasic(artist: Artist) {
-
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
         binding.songs.addOnScrollListener(recyclerViewOnScrollListener)
+        setArrows()
 
 
         if (artist.urlOfficial != "") {
@@ -151,7 +151,6 @@ class ArtistFragment : BaseFragment() {
         } else {
             binding.wikipedia.visibility = View.GONE
         }
-        setArrows()
     }
 
 

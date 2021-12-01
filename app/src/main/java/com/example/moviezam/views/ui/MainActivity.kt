@@ -14,8 +14,8 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
         Fresco.initialize(this)
         setContentView(R.layout.activity_main)
 
-        Store.id = 7130
-        val f = ArtistFragment()
+        Store.id = 5156
+        val f = FilmFragment()
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, f)
