@@ -57,6 +57,11 @@ class SearchFragment: BaseFragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         setUpBasic()
+        if (Store.id == -2) {
+            Store.id = 0
+            binding.searchView.setQuery(Store.shazam,false)
+            Store.shazam = ""
+        }
         return binding.root
     }
 

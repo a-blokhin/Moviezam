@@ -12,14 +12,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.databinding.FragmentShazamBinding
 import com.example.moviezam.models.Store
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ShazamViewModel
+import com.example.moviezam.views.adapters.ArtistCardAdapter
+import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -46,7 +52,25 @@ class ShazamFragment : BaseFragment(){
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShazamBinding.inflate(inflater, container, false)
+        setUpBasic()
         return binding.root
+    }
+    private fun setUpBasic()  {
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    Store.id = -2
+                    Store.shazam = query
+                    mListener.onListFragmentInteraction(-2, SearchFragment())
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
     fun generateJson(convertedObject: JsonObject): JsonObject? {
@@ -172,11 +196,12 @@ class ShazamFragment : BaseFragment(){
         super.onStart()
         //раскоментировать это и нажимать на значок лупы второй сверху строки поиска
 
-        binding.searchView.setOnClickListener {
-            mListener.onListFragmentInteraction(0, SearchFragment())
-        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.fab.setOnClickListener {
+                search()
+            }
+            binding.fadb.setOnClickListener {
                 search()
             }
         }
