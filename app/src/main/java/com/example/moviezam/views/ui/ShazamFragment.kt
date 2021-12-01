@@ -1,7 +1,9 @@
 package com.example.moviezam.views.ui
 
+//import com.example.moviezam.models.SongCard
+//import com.example.moviezam.repository.SongRepository
 import android.Manifest
-import android.app.Activity
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -11,27 +13,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.moviezam.R
-import com.example.moviezam.databinding.ActivityMainBinding
 import com.example.moviezam.databinding.FragmentShazamBinding
-//import com.example.moviezam.models.SongCard
 import com.example.moviezam.models.Store
 import com.example.moviezam.repository.SongRepository
-//import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ShazamViewModel
 import com.example.moviezam.views.adapters.SongCardAdapter
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
-import java.lang.RuntimeException
+import java.io.File
+import java.nio.charset.Charset
 
 class ShazamFragment : BaseFragment(){
     private var _binding: FragmentShazamBinding? = null
@@ -67,7 +61,18 @@ class ShazamFragment : BaseFragment(){
         songJson.addProperty(
             "artist", convertedObject.getAsJsonObject("track")["subtitle"].asString
         )
-        songJson.addProperty("album_name", "")
+        var album_name = ""
+        for (section in convertedObject.get("track").asJsonObject.get("sections").asJsonArray){
+            if (section.asJsonObject.get("type").asString == "SONG"){
+                for (data in section.asJsonObject.get("metadata").asJsonArray){
+                    if (data.asJsonObject.get("title").asString == "Album"){
+                        album_name = data.asJsonObject.get("text").asString
+                    }
+                }
+            }
+        }
+
+        songJson.addProperty("album_name", album_name)
         songJson.addProperty(
             "external_art_url", convertedObject.getAsJsonObject("track")
                 .getAsJsonObject("images")["background"].asString
@@ -105,6 +110,11 @@ class ShazamFragment : BaseFragment(){
                     song_name = withContext(Dispatchers.Default) {
                         return@withContext viewModel.findSong(output.toString(), dir.toString())
                     }
+                    /*val f = File(dir+"shazam.txt")
+                    if (!f.exists()) {
+                        f.createNewFile()
+                    }
+                    f.writeText(song_name.toString(), Charset.defaultCharset())*/
                     val convertedObject = JsonParser().parse(song_name).asJsonObject
                     if (convertedObject.get("matches").toString().length > 2) {
                         Toast.makeText(

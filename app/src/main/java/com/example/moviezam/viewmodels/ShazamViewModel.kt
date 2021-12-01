@@ -1,9 +1,7 @@
 package com.example.moviezam.viewmodels
 
-import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.FragmentActivity
 import com.example.moviezam.models.ShazamSearch
 
 class ShazamViewModel {
