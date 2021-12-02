@@ -19,10 +19,8 @@ import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.views.adapters.SongCardAdapter
 import java.lang.RuntimeException
 import androidx.recyclerview.widget.RecyclerView
-
-
-
-
+import com.example.moviezam.views.common.ArrowList
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class ArtistFragment : BaseFragment() {
@@ -100,8 +98,8 @@ class ArtistFragment : BaseFragment() {
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
-        binding.songs.addOnScrollListener(recyclerViewOnScrollListener)
-        setArrows()
+        binding.songs.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
+        ArrowList.setArrows(binding.songs, binding.leftArrow, binding.rightArrow)
 
 
         if (artist.urlOfficial != "") {
@@ -153,49 +151,6 @@ class ArtistFragment : BaseFragment() {
         }
     }
 
-
-    private fun setArrows(){
-        binding.rightArrow.setOnClickListener {
-            val next = (binding.songs.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() + 1
-            if (next < adapter!!.itemCount){
-                binding.songs.smoothScrollToPosition(next)
-            }
-        }
-
-        binding.leftArrow.setOnClickListener {
-            val prev = (binding.songs.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() - 1
-            if (prev > 0){
-                binding.songs.smoothScrollToPosition(prev)
-            }
-        }
-
-
-
-    }
-
-    private val recyclerViewOnScrollListener: RecyclerView.OnScrollListener =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val lastNum: Int = (binding.songs.layoutManager as LinearLayoutManager).itemCount-1
-                val firstItem: Int =
-                    (binding.songs.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                val lastItem = (binding.songs.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-
-                if ((binding.rightArrow.visibility == View.GONE) && (lastItem != lastNum)){
-                    binding.rightArrow.visibility = View.VISIBLE
-                }
-                if ((binding.leftArrow.visibility == View.GONE) && (firstItem != 0)){
-                    binding.leftArrow.visibility = View.VISIBLE
-                }
-
-                if (lastItem == lastNum) {
-                    binding.rightArrow.visibility = View.GONE
-                } else if (firstItem == 0) {
-                    binding.leftArrow.visibility = View.GONE
-                }
-            }
-        }
 
     private fun goToUrl(url: String) {
         val uriUrl: Uri = Uri.parse(url)

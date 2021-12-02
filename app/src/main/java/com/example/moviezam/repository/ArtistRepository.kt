@@ -1,5 +1,6 @@
 package com.example.moviezam.repository
 
+import android.util.Log
 import com.example.moviezam.models.Artist
 import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.models.MoviezamApi
