@@ -1,10 +1,11 @@
 package com.example.moviezam.repository
 
-import com.example.moviezam.models.Artist
-import com.example.moviezam.models.ArtistCard
-import com.example.moviezam.models.MoviezamApi
-import com.example.moviezam.models.Resource
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.moviezam.models.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -20,9 +21,19 @@ class ArtistRepository {
        return moviezamApi.getArtistById(id)
     }
 
-    suspend fun getArtistsByName(name: String, page: Int): List<ArtistCard> = withContext(Dispatchers.IO) {
+    suspend fun getArtistsPageByName(name: String, page: Int): List<ArtistCard> = withContext(Dispatchers.IO) {
         return@withContext moviezamApi.getArtistsByName(name, page).execute().body()
             ?: emptyList()
+    }
+
+    fun getSearchResultsStream(query: String): Flow<PagingData<ArtistCard>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { ArtistsDataSource(this, query) }
+        ).flow
     }
 
     companion object {

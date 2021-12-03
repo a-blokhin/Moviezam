@@ -5,4 +5,5 @@
     <string name="artists">Artists</string>
     <string name="songs">Songs</string>
     <string name="search">Search</string>
+    <string name="retry">Произошла трагическая ошибка</string>
 </resources>

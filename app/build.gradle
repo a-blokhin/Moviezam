@@ -94,4 +94,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.cardview:cardview:1.0.0'
 
+    // paging3
+    def paging_version = "3.0.0" //current version at the time
+    implementation "androidx.paging:paging-runtime:$paging_version"
+    implementation "androidx.paging:paging-guava:$paging_version"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha08"
+
 }

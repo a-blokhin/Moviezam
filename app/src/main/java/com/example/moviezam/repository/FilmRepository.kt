@@ -1,9 +1,11 @@
 package com.example.moviezam.repository
 
-import android.content.res.Resources
-import com.example.moviezam.R
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.moviezam.models.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import retrofit2.*
 
@@ -16,9 +18,19 @@ class FilmRepository {
         return moviezamApi.getFilmById(id)
     }
 
-    suspend fun getFilmsByName(name: String, page: Int): List<FilmCard> = withContext(Dispatchers.IO) {
+    suspend fun getFilmsPageByName(name: String, page: Int): List<FilmCard> = withContext(Dispatchers.IO) {
         return@withContext moviezamApi.getFilmsByName(name, page).execute().body()
             ?: emptyList()
+    }
+
+    fun getSearchResultsStream(query: String): Flow<PagingData<FilmCard>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { FilmsDataSource(this, query) }
+        ).flow
     }
 
     companion object {
