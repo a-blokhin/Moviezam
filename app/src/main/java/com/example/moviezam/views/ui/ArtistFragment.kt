@@ -4,23 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentArtistBinding
-import com.example.moviezam.models.Artist
-import com.example.moviezam.models.Resource
-import com.example.moviezam.models.Store
 import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.views.adapters.SongCardAdapter
 import java.lang.RuntimeException
-import androidx.recyclerview.widget.RecyclerView
+import com.example.moviezam.R
+import com.example.moviezam.models.*
 import com.example.moviezam.views.common.ArrowList
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class ArtistFragment : BaseFragment() {
@@ -32,6 +29,7 @@ class ArtistFragment : BaseFragment() {
 
     private var adapter: SongCardAdapter? = null
     private val binding get() = _binding!!
+    private var isFav = false
 
 
 
@@ -65,6 +63,7 @@ class ArtistFragment : BaseFragment() {
         }
         if (Store.id > 0) {
             setupObservers()
+
         } else {
             Toast.makeText(activity, "Artist does not exist =(", Toast.LENGTH_LONG).show()
         }
@@ -100,7 +99,6 @@ class ArtistFragment : BaseFragment() {
         adapter!!.setData(artist.songs)
         binding.songs.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
         ArrowList.setArrows(binding.songs, binding.leftArrow, binding.rightArrow)
-
 
         if (artist.urlOfficial != "") {
             binding.official.setOnClickListener {
@@ -148,6 +146,27 @@ class ArtistFragment : BaseFragment() {
             }
         } else {
             binding.wikipedia.visibility = View.GONE
+        }
+        val favourite =
+            context?.let { AppDatabase.getInstance(this.context)?.favDao?.getByType(artist.id.toLong(), getType(Type.ARTIST)) }
+        if (favourite != null) {
+            Log.d("FAV", favourite.i.toString())
+            binding.like.setImageResource(R.drawable.love_black)
+            isFav = true
+        }
+
+        binding.like.setOnClickListener {
+            val fav = FavouriteEntity(artist.id.toLong(), getType(Type.ARTIST))
+            if (isFav){
+                AppDatabase.getInstance(this.context)?.favDao?.delete(artist.id.toLong(), getType(Type.ARTIST))
+                binding.like.setImageResource(R.drawable.love)
+                isFav = false
+            } else {
+                AppDatabase.getInstance(this.context)?.favDao?.insert(fav)
+                binding.like.setImageResource(R.drawable.love_black)
+                isFav = true
+            }
+
         }
     }
 
