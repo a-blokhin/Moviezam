@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -109,7 +111,35 @@ class ShazamFragment : BaseFragment(){
         songJson.addProperty("films", "")// надо сделать List<FilmCard> или не надо
         return songJson
     }
-
+    fun drawprogress(){
+        val handler = Handler(Looper.getMainLooper())
+        val fileSize = 44
+        binding.progressBar.max = fileSize
+        var progressStatus = -1
+        val runnable = java.lang.Runnable {
+            while (progressStatus < fileSize) {
+                progressStatus += 1
+                Thread.sleep(100)
+                handler.post(java.lang.Runnable
+                // This thread runs in the UI
+                {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.progressBar.progress = progressStatus
+                })
+            }
+            handler.post(java.lang.Runnable
+            // This thread runs in the UI
+            {
+                binding.progressBar.progress = 0
+                binding.progressBar.visibility = View.GONE
+                binding.progressShaz.visibility = View.VISIBLE
+                binding.annotationBase.visibility = View.VISIBLE
+            })
+        }
+        Thread(runnable).start()
+        progressStatus = 0
+        binding.progressBar.isIndeterminate = false
+    }
     fun search() {
         val recordAudioPermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO))
         val writePermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -125,12 +155,12 @@ class ShazamFragment : BaseFragment(){
         } else {
 
             if (state) {
+                drawprogress()
                 state = false
                 val output = requireActivity().externalCacheDir?.absolutePath + "/soundrecorder/recording.wav"
                 val dir = requireActivity().externalCacheDir?.absolutePath + "/soundrecorder/"
                 lifecycleScope.launch {
-                    Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG)
-                        .show()
+                    //Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG).show()
                     song_name = withContext(Dispatchers.Default) {
                         return@withContext viewModel.findSong(output.toString(), dir.toString())
                     }
@@ -141,11 +171,11 @@ class ShazamFragment : BaseFragment(){
                     f.writeText(song_name.toString(), Charset.defaultCharset())*/
                     val convertedObject = JsonParser().parse(song_name).asJsonObject
                     if (convertedObject.get("matches").toString().length > 2) {
-                        Toast.makeText(
+                        /*Toast.makeText(
                             getActivity(),
                             convertedObject.getAsJsonObject("track")["title"].asString,
                             Toast.LENGTH_LONG
-                        ).show()
+                        ).show()*/
 
                         Log.d(
                             "MediaRecorderder",
@@ -158,30 +188,37 @@ class ShazamFragment : BaseFragment(){
                         Log.d(
                             "MediaRecorderder", req
                         )
-
                         var songsPerPage = repo.getSongsPageByName(req, 1)
+                        binding.annotationBase.visibility = View.GONE
+                        binding.progressShaz.visibility = View.GONE
                         if (songsPerPage.size > 0){
                             Store.id = songsPerPage[0].id
                             mListener.onListFragmentInteraction(songsPerPage[0].id, SongFragment())
                         } else{
+                            binding.annotationNotInBase.visibility = View.VISIBLE
+                            delay(2000)
                             Store.id = -1
                             var songJson = generateJson(convertedObject).toString().dropLast(3)+"[]}"
                             Store.shazam = songJson
-                            Toast.makeText(getActivity(), "песни нету в беке", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(getActivity(), "песни нету в беке", Toast.LENGTH_SHORT).show()
                             Log.d(
                             "MediaRecorderder", "песни нету в беке"
                             )
                             Log.d(
                                 "MediaRecorderder", songJson.toString()
                             )
+                            binding.annotationNotInBase.visibility = View.GONE
                             mListener.onListFragmentInteraction(-1, SongFragment())
                         }
 
 
 
                     } else {
-                        Toast.makeText(getActivity(), "Песня не нашлась", Toast.LENGTH_LONG)
-                            .show()
+                        binding.annotationBase.visibility = View.GONE
+                        binding.progressShaz.visibility = View.GONE
+                        binding.annotationNotRecognized.visibility = View.VISIBLE
+                        delay(1500)
+                        binding.annotationNotRecognized.visibility = View.GONE
                     }
                     state = true
                 }
@@ -199,9 +236,6 @@ class ShazamFragment : BaseFragment(){
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.fab.setOnClickListener {
-                search()
-            }
-            binding.fadb.setOnClickListener {
                 search()
             }
         }
