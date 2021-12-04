@@ -1,5 +1,10 @@
 package com.example.moviezam.repository
 
+import android.util.Log
+import com.example.moviezam.models.Artist
+import com.example.moviezam.models.ArtistCard
+import com.example.moviezam.models.MoviezamApi
+import com.example.moviezam.models.Resource
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
