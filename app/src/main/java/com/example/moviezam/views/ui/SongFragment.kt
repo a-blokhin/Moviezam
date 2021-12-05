@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentSongBinding
 import com.example.moviezam.models.*
 import com.example.moviezam.viewmodels.SongViewModel
@@ -26,6 +27,7 @@ class SongFragment : BaseFragment() {
     private var filmsAdapter: FilmCardAdapter? = null
 
     private val binding get() = _binding!!
+    private var isFav = false
 
 
     private fun setupObservers() {
@@ -103,6 +105,29 @@ class SongFragment : BaseFragment() {
         filmsAdapter!!.setData(song.films)
         binding.films.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
         ArrowList.setArrows(binding.films, binding.leftArrow, binding.rightArrow)
+
+        val favourite =
+            context?.let { AppDatabase.getInstance(this.context)?.favDao?.getByType(song.id.toLong(), getType(Type.SONG)) }
+        if (favourite != null) {
+            binding.like.setImageResource(R.drawable.love_black)
+            isFav = true
+        }
+
+        binding.like.setOnClickListener {
+            val fav = FavouriteEntity(song.id.toLong(), song.name, song.externalArtUrl, getType(Type.SONG))
+            if (isFav) {
+                AppDatabase.getInstance(this.context)?.favDao?.delete(
+                    song.id.toLong(),
+                    getType(Type.SONG)
+                )
+                binding.like.setImageResource(R.drawable.love)
+                isFav = false
+            } else {
+                AppDatabase.getInstance(this.context)?.favDao?.insert(fav)
+                binding.like.setImageResource(R.drawable.love_black)
+                isFav = true
+            }
+        }
 
     }
 
