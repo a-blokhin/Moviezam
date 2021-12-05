@@ -130,12 +130,17 @@
         <TextView
             android:id="@+id/artist_const_songs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_medium"
-            android:padding="10dp"
+            android:layout_height="54dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/songs"
-            android:textColor="@color/black"
-            android:textSize="30sp" />
+            android:textAlignment="viewStart"
+            android:textColor="#18191F"
+            android:textSize="44sp"
+            android:textStyle="bold" />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/songs"
                     android:layout_width="match_parent"

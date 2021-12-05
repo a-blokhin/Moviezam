@@ -18,9 +18,12 @@ import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
 import com.example.moviezam.views.common.ArrowList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.lang.RuntimeException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.*
 
 
 class FilmFragment : BaseFragment() {
