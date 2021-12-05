@@ -22,8 +22,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical">
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/image"
@@ -101,17 +101,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/artist_name"
                     android:layout_width="0dp"
-                    android:textAlignment="center"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:fontFamily="@font/montserrat_medium"
                     android:padding="10dp"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold"
-                    android:layout_weight="1"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="@string/musician" />
             </LinearLayout>
@@ -121,73 +122,84 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/artist_const_songs"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/songs"
-            android:textAlignment="viewStart"
-            android:textColor="#18191F"
-            android:textSize="44sp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/artist_const_songs"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/songs"
+                android:textAlignment="viewStart"
+                android:textColor="#18191F"
+                android:textSize="44sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/artist_const_songs">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/left_arrow"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="3dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:src="@drawable/left_arrow"
+                    app:borderWidth="0dp"
+                    app:fabCustomSize="30dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/right_arrow"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="3dp"
+                    android:src="@drawable/right_arrow"
+                    app:backgroundTint="@android:color/transparent"
+                    app:borderWidth="0dp"
+                    app:fabCustomSize="30dp"
+                    app:placeholderImageScaleType="centerCrop"
+                    app:rippleColor="@null" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/songs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/artist_const_songs" />
+                    app:layout_constraintTop_toTopOf="parent" />
+            </RelativeLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/like"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        app:borderWidth="0dp"
-        android:src="@drawable/love"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
         android:backgroundTint="@color/white"
-        android:layout_margin="3dp"
+        android:src="@drawable/love"
+        app:borderWidth="0dp"
         app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end"
-        />
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/left_arrow"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:fabCustomSize="30dp"
-        android:src="@drawable/left_arrow"
-
-        app:borderWidth="0dp"
-        android:layout_margin="3dp"
-        app:layout_anchor="@id/songs"
-        android:backgroundTint="@android:color/transparent"
-        app:layout_anchorGravity="center|left|start"
-        />
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/right_arrow"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:fabCustomSize="30dp"
-        app:borderWidth="0dp"
-        android:src="@drawable/right_arrow"
-        app:rippleColor="@null"
-        app:backgroundTint="@android:color/transparent"
-        android:layout_margin="3dp"
-        app:layout_anchor="@id/songs"
-        app:placeholderImageScaleType="centerCrop"
-        app:layout_anchorGravity="center|right|end"
-        />
+        app:layout_anchorGravity="bottom|right|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
