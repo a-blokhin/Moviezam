@@ -47,16 +47,8 @@ class FavouriteCardAdapter(
         fun bind(favourite: FavouriteEntity) {
             binding.favouriteName.text = favourite.name
             binding.favouriteName.isSelected = true
-            if (favourite.img == "" || favourite.img == null) {
-                when (favourite.type) {
-                    "film"   -> binding.avatarImage.setImageURI("https://is2-ssl.mzstatic.com/image/thumb/Music125/v4/c4/3c/66/c43c66c5-df9c-7021-7df0-04c1678c0ed3/794043915260.jpg/88x88bb.jpeg")
-                    "song"   -> binding.avatarImage.setImageURI("https://is2-ssl.mzstatic.com/image/thumb/Music125/v4/c4/3c/66/c43c66c5-df9c-7021-7df0-04c1678c0ed3/794043915260.jpg/88x88bb.jpeg")
-                    "artist" -> binding.avatarImage.setImageURI("https://is2-ssl.mzstatic.com/image/thumb/Music125/v4/c4/3c/66/c43c66c5-df9c-7021-7df0-04c1678c0ed3/794043915260.jpg/88x88bb.jpeg")
-                    else     -> binding.avatarImage.setImageURI("https://is2-ssl.mzstatic.com/image/thumb/Music125/v4/c4/3c/66/c43c66c5-df9c-7021-7df0-04c1678c0ed3/794043915260.jpg/88x88bb.jpeg")
-                }
-            } else {
-                binding.avatarImage.setImageURI(favourite.img)
-            }
+            binding.avatarImage.setImageURI(favourite.img)
+
             binding.itemArtist.setOnClickListener {
                 when (favourite.type) {
                     "film" -> mListener.onListFragmentInteraction(favourite.id.toInt(), FilmFragment())

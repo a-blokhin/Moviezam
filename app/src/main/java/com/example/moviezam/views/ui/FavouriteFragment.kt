@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentFavoritesBinding
+import com.example.moviezam.models.AppDatabase
 import com.example.moviezam.models.Favourite
 import com.example.moviezam.models.FavouriteEntity
 import com.example.moviezam.viewmodels.FavouriteViewModel
@@ -54,7 +55,10 @@ class FavouriteFragment : BaseFragment() {
             setUpBasic(it)
             return
         }
-        setupObservers()
+        var favourite = Favourite(context?.let { AppDatabase.getInstance(this.context)?.favDao?.getAll()}!!)
+        setUpBasic(favourite)
+        favouriteSaved = favourite
+        //setupObservers()
     }
 
     private fun setupObservers() {
