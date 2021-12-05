@@ -22,6 +22,7 @@ import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
+import com.example.moviezam.views.common.ArrowList
 import java.lang.RuntimeException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -126,10 +127,20 @@ class FilmFragment : BaseFragment() {
 
         if (film.similar != null) {
             filmsAdapter!!.setData(film.similar)
+            binding.similar.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrowSimilar, binding.rightArrowSimilar))
+            ArrowList.setArrows(binding.similar, binding.leftArrowSimilar, binding.rightArrowSimilar)
         } else {
             binding.similarSection.visibility = View.GONE
             binding.similar.visibility = View.GONE
+            binding.leftArrowSimilar.visibility = View.GONE
+            binding.rightArrowSimilar.visibility = View.GONE
         }
+        binding.songs.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrowSongs, binding.rightArrowSongs))
+        ArrowList.setArrows(binding.songs, binding.leftArrowSongs, binding.rightArrowSongs)
+
+        binding.artists.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrowArtists, binding.rightArrowArtists))
+        ArrowList.setArrows(binding.artists, binding.leftArrowArtists, binding.rightArrowArtists)
+
 
     }
 

@@ -9,13 +9,13 @@ class ArrowList {
     companion object {
         fun setArrows(
             rv: RecyclerView,
-            rightArrow: FloatingActionButton,
-            leftArrow: FloatingActionButton
+            leftArrow: FloatingActionButton,
+            rightArrow: FloatingActionButton
         ) {
             rightArrow.setOnClickListener {
                 val next =
                     (rv.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() + 1
-                if (next < rv.adapter!!.itemCount) {
+                if (next <= rv.adapter!!.itemCount) {
                     rv.smoothScrollToPosition(next)
                 }
             }
@@ -23,7 +23,7 @@ class ArrowList {
             leftArrow.setOnClickListener {
                 val prev =
                     (rv.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() - 1
-                if (prev > 0) {
+                if (prev >= 0) {
                     rv.smoothScrollToPosition(prev)
                 }
             }
