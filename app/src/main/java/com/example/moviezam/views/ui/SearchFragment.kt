@@ -16,6 +16,7 @@ import com.example.moviezam.databinding.FragmentSearchBinding
 import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.models.LoadingInfo
 import com.example.moviezam.models.SongCard
+import com.example.moviezam.models.Store
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.viewmodels.SongsViewModel
@@ -56,6 +57,11 @@ class SearchFragment: BaseFragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         setUpBasic()
+        if (Store.id == -2) {
+            Store.id = 0
+            binding.searchView.setQuery(Store.shazam,false)
+            Store.shazam = ""
+        }
         return binding.root
     }
 
