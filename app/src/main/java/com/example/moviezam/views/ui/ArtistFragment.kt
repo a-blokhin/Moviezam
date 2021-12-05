@@ -97,6 +97,7 @@ class ArtistFragment : BaseFragment() {
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
+
         binding.songs.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
         ArrowList.setArrows(binding.songs, binding.leftArrow, binding.rightArrow)
 
@@ -150,13 +151,12 @@ class ArtistFragment : BaseFragment() {
         val favourite =
             context?.let { AppDatabase.getInstance(this.context)?.favDao?.getByType(artist.id.toLong(), getType(Type.ARTIST)) }
         if (favourite != null) {
-            Log.d("FAV", favourite.i.toString())
             binding.like.setImageResource(R.drawable.love_black)
             isFav = true
         }
 
         binding.like.setOnClickListener {
-            val fav = FavouriteEntity(artist.id.toLong(), getType(Type.ARTIST))
+            val fav = FavouriteEntity(artist.id.toLong(), artist.name, artist.image, getType(Type.ARTIST))
             if (isFav){
                 AppDatabase.getInstance(this.context)?.favDao?.delete(artist.id.toLong(), getType(Type.ARTIST))
                 binding.like.setImageResource(R.drawable.love)

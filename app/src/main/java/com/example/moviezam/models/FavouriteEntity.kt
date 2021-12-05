@@ -15,6 +15,6 @@ fun getType(type: Type) = when(type){
 
 
 @Entity
-class FavouriteEntity(var id: Long, var type: String) {
+class FavouriteEntity(var id: Long, var name: String, var img: String, var type: String, ) {
     @PrimaryKey(autoGenerate = true) var i: Long = 0
 }
