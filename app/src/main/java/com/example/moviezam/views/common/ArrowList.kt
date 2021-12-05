@@ -12,6 +12,10 @@ class ArrowList {
             leftArrow: FloatingActionButton,
             rightArrow: FloatingActionButton
         ) {
+            if (rv.adapter!!.itemCount == 1) {
+                leftArrow.visibility = View.GONE
+                rightArrow.visibility = View.GONE
+            }
             rightArrow.setOnClickListener {
                 val next =
                     (rv.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() + 1
@@ -55,9 +59,6 @@ class ArrowList {
                             rightArrow.visibility = View.GONE
                         } else if (firstItem == 0) {
                             leftArrow.visibility = View.GONE
-                        } else if (recyclerView.adapter!!.itemCount == 1) {
-                            leftArrow.visibility = View.GONE
-                            rightArrow.visibility = View.GONE
                         }
                     }
                 }

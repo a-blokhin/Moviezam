@@ -18,13 +18,15 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
 
 
 
-
+/*
         Store.id = 357
         val f = FilmFragment()
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, f)
             .commit()
+
+ */
 
 
 
@@ -42,6 +44,13 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
 
 
          */
+
+        Store.id = 176895
+        val f = SongFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, f)
+            .commit()
 
         /*
         val f = ShazamFragment()

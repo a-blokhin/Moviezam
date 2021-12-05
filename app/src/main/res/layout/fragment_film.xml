@@ -36,7 +36,6 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/black_film_rec"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#18191F"
