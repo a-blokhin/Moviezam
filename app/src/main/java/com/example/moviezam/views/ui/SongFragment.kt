@@ -15,6 +15,9 @@ import com.example.moviezam.viewmodels.SongViewModel
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.common.ArrowList
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 
 
@@ -106,26 +109,40 @@ class SongFragment : BaseFragment() {
         binding.films.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
         ArrowList.setArrows(binding.films, binding.leftArrow, binding.rightArrow)
 
-        val favourite =
-            context?.let { AppDatabase.getInstance(this.context)?.favDao?.getByType(song.id.toLong(), getType(Type.SONG)) }
-        if (favourite != null) {
-            binding.like.setImageResource(R.drawable.love_black)
-            isFav = true
+        CoroutineScope(Dispatchers.IO).launch {
+            val favourite =
+                context?.let {
+                    AppDatabase.getInstance(context)?.favDao?.getByType(
+                        song.id.toLong(),
+                        getType(Type.SONG)
+                    )
+                }
+            if (favourite != null) {
+                binding.like.setImageResource(R.drawable.love_black)
+                isFav = true
+            }
         }
 
         binding.like.setOnClickListener {
-            val fav = FavouriteEntity(song.id.toLong(), song.name, song.externalArtUrl, getType(Type.SONG))
-            if (isFav) {
-                AppDatabase.getInstance(this.context)?.favDao?.delete(
-                    song.id.toLong(),
-                    getType(Type.SONG)
-                )
-                binding.like.setImageResource(R.drawable.love)
-                isFav = false
-            } else {
-                AppDatabase.getInstance(this.context)?.favDao?.insert(fav)
-                binding.like.setImageResource(R.drawable.love_black)
-                isFav = true
+            val fav = FavouriteEntity(
+                song.id.toLong(),
+                song.name,
+                song.externalArtUrl,
+                getType(Type.SONG)
+            )
+            CoroutineScope(Dispatchers.IO).launch {
+                if (isFav) {
+                    AppDatabase.getInstance(context)?.favDao?.delete(
+                        song.id.toLong(),
+                        getType(Type.SONG)
+                    )
+                    binding.like.setImageResource(R.drawable.love)
+                    isFav = false
+                } else {
+                    AppDatabase.getInstance(context)?.favDao?.insert(fav)
+                    binding.like.setImageResource(R.drawable.love_black)
+                    isFav = true
+                }
             }
         }
 

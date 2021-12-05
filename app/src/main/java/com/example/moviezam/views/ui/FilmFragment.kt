@@ -139,27 +139,37 @@ class FilmFragment : BaseFragment() {
 
         binding.artists.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrowArtists, binding.rightArrowArtists))
         ArrowList.setArrows(binding.artists, binding.leftArrowArtists, binding.rightArrowArtists)
+        CoroutineScope(Dispatchers.IO).launch {
 
-        val favourite =
-            context?.let { AppDatabase.getInstance(this.context)?.favDao?.getByType(film.id.toLong(), getType(Type.FILM)) }
-        if (favourite != null) {
-            binding.like.setImageResource(R.drawable.love_black)
-            isFav = true
+
+            val favourite =
+                context?.let {
+                    AppDatabase.getInstance(context)?.favDao?.getByType(
+                        film.id.toLong(),
+                        getType(Type.FILM)
+                    )
+                }
+            if (favourite != null) {
+                binding.like.setImageResource(R.drawable.love_black)
+                isFav = true
+            }
         }
 
         binding.like.setOnClickListener {
             val fav = FavouriteEntity(film.id.toLong(), film.name, film.image, getType(Type.FILM))
-            if (isFav) {
-                AppDatabase.getInstance(this.context)?.favDao?.delete(
-                    film.id.toLong(),
-                    getType(Type.FILM)
-                )
-                binding.like.setImageResource(R.drawable.love)
-                isFav = false
-            } else {
-                AppDatabase.getInstance(this.context)?.favDao?.insert(fav)
-                binding.like.setImageResource(R.drawable.love_black)
-                isFav = true
+            CoroutineScope(Dispatchers.IO).launch {
+                if (isFav) {
+                    AppDatabase.getInstance(context)?.favDao?.delete(
+                        film.id.toLong(),
+                        getType(Type.FILM)
+                    )
+                    binding.like.setImageResource(R.drawable.love)
+                    isFav = false
+                } else {
+                    AppDatabase.getInstance(context)?.favDao?.insert(fav)
+                    binding.like.setImageResource(R.drawable.love_black)
+                    isFav = true
+                }
             }
         }
 

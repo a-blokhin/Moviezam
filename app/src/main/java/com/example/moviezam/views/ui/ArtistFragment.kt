@@ -18,6 +18,10 @@ import java.lang.RuntimeException
 import com.example.moviezam.R
 import com.example.moviezam.models.*
 import com.example.moviezam.views.common.ArrowList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 
 class ArtistFragment : BaseFragment() {
@@ -148,23 +152,31 @@ class ArtistFragment : BaseFragment() {
         } else {
             binding.wikipedia.visibility = View.GONE
         }
-        val favourite =
-            context?.let { AppDatabase.getInstance(this.context)?.favDao?.getByType(artist.id.toLong(), getType(Type.ARTIST)) }
-        if (favourite != null) {
-            binding.like.setImageResource(R.drawable.love_black)
-            isFav = true
+        CoroutineScope(Dispatchers.IO).launch{
+            val favourite =
+                context?.let { AppDatabase.getInstance(context)?.favDao?.getByType(artist.id.toLong(), getType(Type.ARTIST)) }
+            if (favourite != null) {
+                binding.like.setImageResource(R.drawable.love_black)
+                isFav = true
+            }
         }
+
 
         binding.like.setOnClickListener {
             val fav = FavouriteEntity(artist.id.toLong(), artist.name, artist.image, getType(Type.ARTIST))
-            if (isFav){
-                AppDatabase.getInstance(this.context)?.favDao?.delete(artist.id.toLong(), getType(Type.ARTIST))
-                binding.like.setImageResource(R.drawable.love)
-                isFav = false
-            } else {
-                AppDatabase.getInstance(this.context)?.favDao?.insert(fav)
-                binding.like.setImageResource(R.drawable.love_black)
-                isFav = true
+            CoroutineScope(Dispatchers.IO).launch {
+                if (isFav) {
+                    AppDatabase.getInstance(context)?.favDao?.delete(
+                        artist.id.toLong(),
+                        getType(Type.ARTIST)
+                    )
+                    binding.like.setImageResource(R.drawable.love)
+                    isFav = false
+                } else {
+                    AppDatabase.getInstance(context)?.favDao?.insert(fav)
+                    binding.like.setImageResource(R.drawable.love_black)
+                    isFav = true
+                }
             }
 
         }
