@@ -1,12 +1,8 @@
 package com.example.moviezam.views.ui
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +10,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.databinding.FragmentFilmBinding
 import com.example.moviezam.models.*
-import com.example.moviezam.viewmodels.ArtistViewModel
 import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
