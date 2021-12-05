@@ -46,17 +46,17 @@ class FilmFragment : BaseFragment() {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        binding.progressBar.visibility = View.GONE
+                        //binding.progressBar.visibility = View.GONE
                         resource.data?.let { film ->
                             setUpBasic(film)
                             filmSaved = film}
                     }
                     Resource.Status.ERROR -> {
-                        binding.progressBar.visibility = View.GONE
+                        //binding.progressBar.visibility = View.GONE
                         Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
                     }
                     Resource.Status.LOADING -> {
-                        binding.progressBar.visibility = View.VISIBLE
+                        //binding.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
@@ -85,9 +85,9 @@ class FilmFragment : BaseFragment() {
     ): View {
         _binding = FragmentFilmBinding.inflate(inflater, container, false)
 
-        binding.songs.layoutManager = LinearLayoutManager(this.context)
-        binding.artists.layoutManager = LinearLayoutManager(this.context)
-        binding.similar.layoutManager = LinearLayoutManager(this.context)
+        binding.songs.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
+        binding.artists.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
+        binding.similar.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
 
         songsAdapter = SongCardAdapter(mListener, listOf<SongCard>())
         artistsAdapter = ArtistCardAdapter(mListener, listOf<ArtistCard>())

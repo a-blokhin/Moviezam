@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.ui.ArtistFragment">
+
+
+    <ScrollView
+        android:id="@+id/artist_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/artist_img_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/artist_background"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:translationZ="90dp"
+                android:visibility="gone"
+                />
+
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/artist_name"
+                fresco:placeholderImageScaleType="centerCrop"
+                />
+
+            <TextView
+                android:id="@+id/artist_name"
+                android:fontFamily="@font/montserrat_medium"
+                app:layout_constraintTop_toBottomOf="@id/image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/musician"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:background="@color/black"
+                android:padding="10dp"
+                />
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/external"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/artist_name"
+                app:layout_constraintBottom_toTopOf="@id/artist_const_songs">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/official"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        fresco:placeholderImage="@drawable/official"
+                        android:clickable="true"
+
+                        android:focusable="true" />
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/wikipedia"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        fresco:placeholderImage="@drawable/wikipedia"
+                        />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/itunes"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        fresco:placeholderImage="@drawable/itunes"
+                        />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/spotify"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        fresco:placeholderImage="@drawable/spotify"
+                        />
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/apple_music"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        fresco:placeholderImage="@drawable/apple_music"
+                        />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/amazon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        fresco:placeholderImage="@drawable/amazon"
+                        />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+
+            <TextView
+                android:id="@+id/artist_const_songs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:padding="10dp"
+                android:text="@string/songs"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                app:layout_constraintTop_toBottomOf="@id/external" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/songs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/artist_const_songs"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
