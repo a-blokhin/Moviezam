@@ -1,18 +1,16 @@
 package com.example.moviezam.views.adapters
 
-import android.app.PendingIntent.getActivity
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviezam.R
 import com.example.moviezam.databinding.ItemFavouriteBinding
 import com.example.moviezam.models.FavouriteEntity
-import com.example.moviezam.models.Type
-import com.example.moviezam.models.getType
-import com.example.moviezam.views.ui.*
+import com.example.moviezam.views.ui.ArtistFragment
+import com.example.moviezam.views.ui.BaseFragment
+import com.example.moviezam.views.ui.FilmFragment
+import com.example.moviezam.views.ui.SongFragment
 
 
 class FavouriteCardAdapter(

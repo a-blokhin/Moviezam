@@ -1,39 +1,26 @@
 package com.example.moviezam.views.ui
 
-//import com.example.moviezam.models.SongCard
-//import com.example.moviezam.repository.SongRepository
 import android.Manifest
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.databinding.FragmentShazamBinding
 import com.example.moviezam.models.Store
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ShazamViewModel
-import com.example.moviezam.views.adapters.ArtistCardAdapter
-import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
-import java.io.File
-import java.nio.charset.Charset
 
 class ShazamFragment : BaseFragment(){
     private var _binding: FragmentShazamBinding? = null
