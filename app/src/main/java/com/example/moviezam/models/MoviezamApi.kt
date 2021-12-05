@@ -1,12 +1,15 @@
 package com.example.moviezam.models
 
+import com.example.moviezam.repository.ArtistRepository
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MoviezamApi {
+
     @GET("/artist")
     suspend fun getArtistById(
         @Query("id") id: Int
@@ -38,4 +41,21 @@ interface MoviezamApi {
         @Query("search") name: String,
         @Query("page") pageNumber: Int
     ): Call<List<ArtistCard>>
+
+    @GET("/find_film")
+    fun getFilmsByName(
+        @Query("search") name: String,
+        @Query("page") pageNumber: Int
+    ): Call<List<FilmCard>>
+}
+
+class Moviezam {
+    companion object {
+        private val retrofit = Retrofit.Builder()
+            .baseUrl("http://95.163.180.8:8081")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        var api: MoviezamApi = retrofit.create(MoviezamApi::class.java)
+    }
 }
