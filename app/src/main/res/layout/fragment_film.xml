@@ -9,7 +9,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
-        android:background="@color/white"
+        android:background="@color/light_black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -17,7 +17,7 @@
             android:id="@+id/collapsing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|snap">
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/film_img"
@@ -55,7 +55,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="@id/black_film_rec"
@@ -72,7 +72,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/film_title"
@@ -92,7 +92,7 @@
                         android:id="@+id/song_button"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/radio_flat_selector"
+                        android:background="@drawable/radio_flat_selector_page"
                         android:button="@android:color/transparent"
                         android:checked="true"
                         android:gravity="center"
@@ -102,13 +102,13 @@
                         android:paddingBottom="3dp"
                         android:text="@string/songs"
                         android:textSize="20sp"
-                        android:textColor="@color/radio_flat_text_selector" />
+                        android:textColor="@color/radio_flat_text_selector_page" />
 
                     <RadioButton
                         android:id="@+id/artist_button"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/radio_flat_selector"
+                        android:background="@drawable/radio_flat_selector_page"
                         android:button="@android:color/transparent"
                         android:gravity="center"
                         android:paddingLeft="16dp"
@@ -117,13 +117,13 @@
                         android:paddingBottom="3dp"
                         android:text="@string/artists"
                         android:textSize="20sp"
-                        android:textColor="@color/radio_flat_text_selector" />
+                        android:textColor="@color/radio_flat_text_selector_page" />
 
                     <RadioButton
                         android:id="@+id/film_button"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/radio_flat_selector"
+                        android:background="@drawable/radio_flat_selector_page"
                         android:button="@android:color/transparent"
                         android:gravity="center"
                         android:paddingLeft="16dp"
@@ -132,7 +132,7 @@
                         android:paddingBottom="3dp"
                         android:text="@string/similar"
                         android:textSize="20sp"
-                        android:textColor="@color/radio_flat_text_selector" />
+                        android:textColor="@color/radio_flat_text_selector_page" />
 
                 </RadioGroup>
 
