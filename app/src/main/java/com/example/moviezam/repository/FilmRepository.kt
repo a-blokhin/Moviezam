@@ -12,14 +12,13 @@ import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 
 class FilmRepository {
-    private val moviezamApi = retrofit.create(MoviezamApi::class.java)
 
     suspend fun getFilmById(id: Int): Response<Film> {
-        return moviezamApi.getFilmById(id)
+        return Moviezam.api.getFilmById(id)
     }
 
-    suspend fun getFilmsPageByName(name: String, page: Int): List<FilmCard> = withContext(Dispatchers.IO) {
-        return@withContext moviezamApi.getFilmsByName(name, page).execute().body()
+    suspend fun getFilmsByName(name: String, page: Int): List<FilmCard> = withContext(Dispatchers.IO) {
+        return@withContext Moviezam.api.getFilmsByName(name, page).execute().body()
             ?: emptyList()
     }
 

@@ -1,27 +1,23 @@
 package com.example.moviezam.views.ui
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.moviezam.databinding.FragmentArtistBinding
-import com.example.moviezam.databinding.FragmentFilmBinding
+import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentSongBinding
 import com.example.moviezam.models.*
-import com.example.moviezam.viewmodels.ArtistViewModel
-import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.viewmodels.SongViewModel
-import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
-import com.example.moviezam.views.adapters.SongCardAdapter
+import com.example.moviezam.views.common.ArrowList
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 
 
@@ -34,6 +30,7 @@ class SongFragment : BaseFragment() {
     private var filmsAdapter: FilmCardAdapter? = null
 
     private val binding get() = _binding!!
+    private var isFav = false
 
 
     private fun setupObservers() {
@@ -41,17 +38,17 @@ class SongFragment : BaseFragment() {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        binding.progressBar.visibility = View.GONE
+                        //binding.progressBar.visibility = View.GONE
                         resource.data?.let { song ->
                             setUpBasic(song)
                             songSaved = song}
                     }
                     Resource.Status.ERROR -> {
-                        binding.progressBar.visibility = View.GONE
+                       // binding.progressBar.visibility = View.GONE
                         Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
                     }
                     Resource.Status.LOADING -> {
-                        binding.progressBar.visibility = View.VISIBLE
+                        //binding.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
@@ -102,7 +99,6 @@ class SongFragment : BaseFragment() {
         }
     }
 
-
     private fun setUpBasic(song: Song) {
         binding.songImg.setImageURI(song.externalArtUrl)
         binding.songTitle.text = song.name
@@ -110,6 +106,45 @@ class SongFragment : BaseFragment() {
         binding.songDesc.text = if (song.albumName != "") song.artist.plus(" - ").plus(song.albumName) else song.artist
         binding.songDesc.isSelected = true
         filmsAdapter!!.setData(song.films)
+        binding.films.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
+        ArrowList.setArrows(binding.films, binding.leftArrow, binding.rightArrow)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val favourite =
+                context?.let {
+                    AppDatabase.getInstance(context)?.favDao?.getByType(
+                        song.id.toLong(),
+                        getType(Type.SONG)
+                    )
+                }
+            if (favourite != null) {
+                binding.like.setImageResource(R.drawable.love_black)
+                isFav = true
+            }
+        }
+
+        binding.like.setOnClickListener {
+            val fav = FavouriteEntity(
+                song.id.toLong(),
+                song.name,
+                song.externalArtUrl,
+                getType(Type.SONG)
+            )
+            CoroutineScope(Dispatchers.IO).launch {
+                if (isFav) {
+                    AppDatabase.getInstance(context)?.favDao?.delete(
+                        song.id.toLong(),
+                        getType(Type.SONG)
+                    )
+                    binding.like.setImageResource(R.drawable.love)
+                    isFav = false
+                } else {
+                    AppDatabase.getInstance(context)?.favDao?.insert(fav)
+                    binding.like.setImageResource(R.drawable.love_black)
+                    isFav = true
+                }
+            }
+        }
 
     }
 
