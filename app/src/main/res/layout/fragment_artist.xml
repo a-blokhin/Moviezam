@@ -155,6 +155,7 @@
                     android:layout_centerVertical="true"
                     android:layout_margin="3dp"
                     android:backgroundTint="@android:color/transparent"
+
                     android:src="@drawable/left_arrow"
                     app:borderWidth="0dp"
                     app:fabCustomSize="30dp" />

@@ -79,7 +79,7 @@ class SongFragment : BaseFragment() {
     ): View {
         _binding = FragmentSongBinding.inflate(inflater, container, false)
 
-        binding.films.layoutManager = LinearLayoutManager(this.context)
+        binding.films.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
 
         filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>() )
 
