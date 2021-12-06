@@ -49,38 +49,32 @@
 
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/official"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            style="@style/Icons"
                             fresco:placeholderImage="@drawable/official" />
 
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/wikipedia"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            style="@style/Icons"
                             fresco:placeholderImage="@drawable/wikipedia" />
 
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/itunes"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            style="@style/Icons"
                             fresco:placeholderImage="@drawable/itunes" />
 
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/spotify"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            style="@style/Icons"
                             fresco:placeholderImage="@drawable/spotify" />
 
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/apple_music"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            style="@style/Icons"
                             fresco:placeholderImage="@drawable/apple_music" />
 
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/amazon"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            style="@style/Icons"
                             fresco:placeholderImage="@drawable/amazon" />
 
                     </LinearLayout>
