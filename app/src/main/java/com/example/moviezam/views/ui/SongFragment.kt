@@ -13,7 +13,6 @@ import com.example.moviezam.databinding.FragmentSongBinding
 import com.example.moviezam.models.*
 import com.example.moviezam.viewmodels.SongViewModel
 import com.example.moviezam.views.adapters.FilmCardAdapter
-import com.example.moviezam.views.common.ArrowList
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,23 +37,19 @@ class SongFragment : BaseFragment() {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        //binding.progressBar.visibility = View.GONE
                         resource.data?.let { song ->
                             setUpBasic(song)
                             songSaved = song}
                     }
                     Resource.Status.ERROR -> {
-                       // binding.progressBar.visibility = View.GONE
                         Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
                     }
                     Resource.Status.LOADING -> {
-                        //binding.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
         })
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -106,8 +101,6 @@ class SongFragment : BaseFragment() {
         binding.songDesc.text = if (song.albumName != "") song.artist.plus(" - ").plus(song.albumName) else song.artist
         binding.songDesc.isSelected = true
         filmsAdapter!!.setData(song.films)
-        binding.films.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
-        ArrowList.setArrows(binding.films, binding.leftArrow, binding.rightArrow)
 
         CoroutineScope(Dispatchers.IO).launch {
             val favourite =

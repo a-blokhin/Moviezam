@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.databinding.FragmentArtistBinding
 import com.example.moviezam.viewmodels.ArtistViewModel
@@ -17,10 +15,8 @@ import com.example.moviezam.views.adapters.SongCardAdapter
 import java.lang.RuntimeException
 import com.example.moviezam.R
 import com.example.moviezam.models.*
-import com.example.moviezam.views.common.ArrowList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -36,23 +32,20 @@ class ArtistFragment : BaseFragment() {
     private var isFav = false
 
 
-
     private fun setupObservers() {
         viewModel.loadArtist(Store.id).observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        //binding.progressBar.visibility = View.GONE
                         resource.data?.let { artist ->
                             setUpBasic(artist)
-                            artistSaved = artist }
+                            artistSaved = artist
+                        }
                     }
                     Resource.Status.ERROR -> {
-                        //binding.progressBar.visibility = View.GONE
                         Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
                     }
                     Resource.Status.LOADING -> {
-                      //  binding.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
@@ -79,7 +72,8 @@ class ArtistFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
-        binding.songs.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
+        binding.songs.layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         adapter = SongCardAdapter(mListener, listOf())
         binding.songs.adapter = adapter
 
@@ -101,9 +95,6 @@ class ArtistFragment : BaseFragment() {
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)
-
-        binding.songs.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrow, binding.rightArrow))
-        ArrowList.setArrows(binding.songs, binding.leftArrow, binding.rightArrow)
 
         if (artist.urlOfficial != "") {
             binding.official.setOnClickListener {
@@ -152,9 +143,14 @@ class ArtistFragment : BaseFragment() {
         } else {
             binding.wikipedia.visibility = View.GONE
         }
-        CoroutineScope(Dispatchers.IO).launch{
+        CoroutineScope(Dispatchers.IO).launch {
             val favourite =
-                context?.let { AppDatabase.getInstance(context)?.favDao?.getByType(artist.id.toLong(), getType(Type.ARTIST)) }
+                context?.let {
+                    AppDatabase.getInstance(context)?.favDao?.getByType(
+                        artist.id.toLong(),
+                        getType(Type.ARTIST)
+                    )
+                }
             if (favourite != null) {
                 binding.like.setImageResource(R.drawable.love_black)
                 isFav = true
@@ -163,7 +159,8 @@ class ArtistFragment : BaseFragment() {
 
 
         binding.like.setOnClickListener {
-            val fav = FavouriteEntity(artist.id.toLong(), artist.name, artist.image, getType(Type.ARTIST))
+            val fav =
+                FavouriteEntity(artist.id.toLong(), artist.name, artist.image, getType(Type.ARTIST))
             CoroutineScope(Dispatchers.IO).launch {
                 if (isFav) {
                     AppDatabase.getInstance(context)?.favDao?.delete(
@@ -193,9 +190,4 @@ class ArtistFragment : BaseFragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
-
-
-
 }

@@ -17,7 +17,6 @@ import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
-import com.example.moviezam.views.common.ArrowList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.lang.RuntimeException
@@ -85,17 +84,27 @@ class FilmFragment : BaseFragment() {
     ): View {
         _binding = FragmentFilmBinding.inflate(inflater, container, false)
 
-        binding.songs.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        binding.artists.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        binding.similar.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-
         songsAdapter = SongCardAdapter(mListener, listOf<SongCard>())
         artistsAdapter = ArtistCardAdapter(mListener, listOf<ArtistCard>())
         filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>())
 
-        binding.songs.adapter = songsAdapter
-        binding.artists.adapter = artistsAdapter
-        binding.similar.adapter = filmsAdapter
+        binding.list.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+
+        binding.list.adapter = songsAdapter
+
+        binding.buttonView.setOnCheckedChangeListener { _, id ->
+            when (id) {
+                binding.songButton.id -> {
+                    binding.list.adapter = songsAdapter
+                }
+                binding.artistButton.id -> {
+                    binding.list.adapter = artistsAdapter
+                }
+                binding.filmButton.id -> {
+                    binding.list.adapter = filmsAdapter
+                }
+            }
+        }
 
         return binding.root
     }
@@ -124,24 +133,13 @@ class FilmFragment : BaseFragment() {
         songsAdapter!!.setData(film.songs)
         artistsAdapter!!.setData(film.artists)
 
+
         if (film.similar != null) {
             filmsAdapter!!.setData(film.similar)
-            binding.similar.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrowSimilar, binding.rightArrowSimilar))
-            ArrowList.setArrows(binding.similar, binding.leftArrowSimilar, binding.rightArrowSimilar)
         } else {
-            binding.similarSection.visibility = View.GONE
-            binding.similar.visibility = View.GONE
-            binding.leftArrowSimilar.visibility = View.GONE
-            binding.rightArrowSimilar.visibility = View.GONE
+            binding.filmButton.visibility = View.GONE
         }
-        binding.songs.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrowSongs, binding.rightArrowSongs))
-        ArrowList.setArrows(binding.songs, binding.leftArrowSongs, binding.rightArrowSongs)
-
-        binding.artists.addOnScrollListener(ArrowList.getRVScrollListener(binding.leftArrowArtists, binding.rightArrowArtists))
-        ArrowList.setArrows(binding.artists, binding.leftArrowArtists, binding.rightArrowArtists)
         CoroutineScope(Dispatchers.IO).launch {
-
-
             val favourite =
                 context?.let {
                     AppDatabase.getInstance(context)?.favDao?.getByType(

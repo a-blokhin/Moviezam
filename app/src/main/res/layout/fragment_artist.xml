@@ -141,48 +141,12 @@
                 android:textSize="44sp"
                 android:textStyle="bold" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:layout_constraintTop_toBottomOf="@id/artist_const_songs">
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/left_arrow"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="3dp"
-                    android:backgroundTint="@android:color/transparent"
-
-                    android:src="@drawable/left_arrow"
-                    app:borderWidth="0dp"
-                    app:fabCustomSize="30dp" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/right_arrow"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="3dp"
-                    android:src="@drawable/right_arrow"
-                    app:backgroundTint="@android:color/transparent"
-                    app:borderWidth="0dp"
-                    app:fabCustomSize="30dp"
-                    app:placeholderImageScaleType="centerCrop"
-                    app:rippleColor="@null" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/songs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toTopOf="parent" />
-            </RelativeLayout>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -195,6 +159,6 @@
         android:src="@drawable/love"
         app:borderWidth="0dp"
         app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchorGravity="bottom|right|top" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

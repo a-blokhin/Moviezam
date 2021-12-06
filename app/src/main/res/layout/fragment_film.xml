@@ -9,7 +9,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
-        android:background="#18191F"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -42,7 +42,6 @@
                 android:paddingStart="24dp"
                 android:paddingTop="24dp"
                 android:paddingEnd="24dp"
-                android:paddingBottom="24dp"
                 app:layout_constraintTop_toBottomOf="@id/film_img">
 
                 <TextView
@@ -56,7 +55,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="@id/black_film_rec"
@@ -73,11 +72,69 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/film_title"
                     tools:text="SOME TEXT" />
+                <RadioGroup
+                    android:id="@+id/button_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/film_desc">
+
+                    <RadioButton
+                        android:id="@+id/song_button"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/radio_flat_selector"
+                        android:button="@android:color/transparent"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/songs"
+                        android:textSize="20sp"
+                        android:textColor="@color/radio_flat_text_selector" />
+
+                    <RadioButton
+                        android:id="@+id/artist_button"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/radio_flat_selector"
+                        android:button="@android:color/transparent"
+                        android:gravity="center"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/artists"
+                        android:textSize="20sp"
+                        android:textColor="@color/radio_flat_text_selector" />
+
+                    <RadioButton
+                        android:id="@+id/film_button"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/radio_flat_selector"
+                        android:button="@android:color/transparent"
+                        android:gravity="center"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/similar"
+                        android:textSize="20sp"
+                        android:textColor="@color/radio_flat_text_selector" />
+
+                </RadioGroup>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -93,189 +150,24 @@
         android:src="@drawable/love"
         app:borderWidth="0dp"
         app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchorGravity="top|right|end" />
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/artists_section"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/artists"
-            android:textAlignment="viewStart"
-            android:textColor="#18191F"
-            android:textSize="44sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/artists"
-            app:layout_constraintTop_toBottomOf="@id/black_film_rec" />
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/left_arrow_artists"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:layout_margin="3dp"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/left_arrow"
-                android:translationZ="2dp"
-                app:borderWidth="0dp"
-                app:fabCustomSize="30dp"/>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/right_arrow_artists"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="3dp"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/right_arrow"
-                android:translationZ="2dp"
-                app:borderWidth="0dp"
-                app:fabCustomSize="30dp"
-                app:layout_constraintRight_toRightOf="@id/artists"
-                />
-
+            android:orientation="vertical">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/artists"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                 />
-        </RelativeLayout>
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+        </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/songs_section"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/songs"
-            android:textAlignment="viewStart"
-            android:textColor="#18191F"
-            android:textSize="44sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/songs"
-            app:layout_constraintTop_toBottomOf="@id/artists" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/songs_section">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/left_arrow_songs"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="3dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/left_arrow"
-                android:translationZ="2dp"
-                app:borderWidth="0dp"
-                app:fabCustomSize="30dp"/>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/right_arrow_songs"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="3dp"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/right_arrow"
-                android:translationZ="2dp"
-                app:borderWidth="0dp"
-                app:fabCustomSize="30dp"
-                android:gravity="end|center_vertical" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/songs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/similar_section"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginStart="24dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/similar"
-            android:textAlignment="viewStart"
-            android:textColor="#18191F"
-            android:textSize="44sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/songs" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/similar_section">
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/left_arrow_similar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:layout_margin="3dp"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/left_arrow"
-                android:translationZ="2dp"
-                app:borderWidth="0dp"
-                app:fabCustomSize="30dp"/>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/right_arrow_similar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="3dp"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/right_arrow"
-                android:translationZ="2dp"
-                app:borderWidth="0dp"
-                app:fabCustomSize="30dp"
-                android:gravity="end|center_vertical" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/similar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
-        </RelativeLayout>
-
-    </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
 
