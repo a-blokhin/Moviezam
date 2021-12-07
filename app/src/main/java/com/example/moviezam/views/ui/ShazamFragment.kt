@@ -3,11 +3,13 @@ package com.example.moviezam.views.ui
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.media.MediaRecorder
 import android.os.*
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import android.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -19,6 +21,7 @@ import com.example.moviezam.viewmodels.ShazamViewModel
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
+import java.lang.Double.min
 
 class ShazamFragment : BaseFragment(){
     private var _binding: FragmentShazamBinding? = null
@@ -92,85 +95,47 @@ class ShazamFragment : BaseFragment(){
         songJson.addProperty("films", "")// надо сделать List<FilmCard> или не надо
         return songJson
     }
-    fun drawprogresss(){
+    fun drawprogresss(output: String){
         lifecycleScope.launch {
             withContext(Dispatchers.Main) {
                 val fileSize = 44
+                binding.annotationRecord.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
+                binding.progressVolume.visibility = View.VISIBLE
+                binding.progressVolume.max = 8
                 binding.progressBar.max = fileSize
                 var progressStatus = -1
+                var mediaRecorder = MediaRecorder().apply {
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
+                    setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                    setOutputFile(output.dropLast(4)+"2.wav")}
+                mediaRecorder.prepare()
+                mediaRecorder.start()
                 while (progressStatus < fileSize) {
                     progressStatus += 1
                     delay(100)
+                    val scale = ((mediaRecorder?.maxAmplitude?.div(32768.0) ?: 0.0).toFloat()*10.0-2.0)
                     // This thread runs in the UI
-                    binding.annotationRecord.visibility = View.VISIBLE
-                    binding.progressBar.visibility = View.VISIBLE
+                    Log.d("volume", "scale = $scale")
                     binding.progressBar.progress = progressStatus
+                    binding.progressVolume.progress = scale.toInt()
                 }
+                mediaRecorder.stop()
+                mediaRecorder.reset()
+                mediaRecorder.release()
                 binding.progressBar.progress = 0
-                binding.annotationRecord.visibility = View.GONE
+                binding.progressVolume.progress = 0
                 binding.progressBar.visibility = View.GONE
+                binding.annotationRecord.visibility = View.GONE
+                binding.progressVolume.visibility = View.GONE
                 binding.progressShaz.visibility = View.VISIBLE
                 binding.annotationBase.visibility = View.VISIBLE
-                progressStatus = 0
                 binding.progressBar.isIndeterminate = false
             }
         }
     }
-    /*    private fun handleVolume(volume: Int) {
-            val scale = min(8.0, volume / MAX_RECORD_AMPLITUDE + 1.0).toFloat()
-            //Log.d("Scale", "Scale = $scale")
 
-            binding.volumeButton.animate()
-                .scaleX(scale)
-                .scaleY(scale)
-                .setInterpolator(interpolator)
-                .duration = VOLUME_UPDATE_DURATION
-        }
-        private companion object {
-            private const val MAX_RECORD_AMPLITUDE = 32768.0
-            private const val VOLUME_UPDATE_DURATION = 100L
-            private val interpolator = OvershootInterpolator()
-        }
-
-        fun drawVolume(output: String){
-            val handler = Handler(Looper.getMainLooper())
-            val fileSize = 88
-            var progressStatus = -1
-            //var mediaRecorder: MediaRecorder? = null
-            var mediaRecorder = MediaRecorder().apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                setOutputFile(output.dropLast(4)+"2.wav")}
-            val runnable = java.lang.Runnable {
-                binding.volumeButton.visibility = View.VISIBLE
-                while (progressStatus < fileSize) {
-
-                    //val volume =
-                    //Log.d("volume", "Volume = $volume")
-
-                    val scale = min(8.0, (mediaRecorder?.maxAmplitude?.div(MAX_RECORD_AMPLITUDE) ?: 0.0) + 1.0).toFloat()
-                    handler.post {binding.volumeButton.animate()
-                        .scaleX(scale)
-
-                        //.setInterpolator(interpolator)
-                        //.duration = VOLUME_UPDATE_DURATION
-                    }
-                    progressStatus += 1
-                    Thread.sleep(170)
-                }
-                handler.post {
-                    binding.volumeButton.visibility = View.GONE}
-                mediaRecorder.stop()
-                mediaRecorder.reset()
-                mediaRecorder.release()
-            }
-            mediaRecorder.prepare()
-            mediaRecorder.start()
-            Thread(runnable).start()
-
-
-        }*/
     fun search() {
         val recordAudioPermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO))
         val writePermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -186,9 +151,10 @@ class ShazamFragment : BaseFragment(){
         } else {
 
             if (state) {
-                drawprogresss()
                 state = false
                 val output = requireActivity().externalCacheDir?.absolutePath + "/recording.wav"
+                drawprogresss(output)
+                //drawVolume(output)
                 lifecycleScope.launch {
                     //Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG).show()
                     song_name = withContext(Dispatchers.Default) {
@@ -267,8 +233,10 @@ class ShazamFragment : BaseFragment(){
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            binding.fab.setOnClickListener {
-                search()
+            if (state) {
+                binding.fab.setOnClickListener {
+                    search()
+                }
             }
         }
 

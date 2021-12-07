@@ -142,6 +142,19 @@
         android:visibility="gone"
         />
 
+    <ProgressBar
+        android:id="@+id/progressVolume"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="208dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="230dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        android:progressDrawable="@drawable/dash_progressbar" />
+
+
     <ImageButton
         android:id="@+id/fab"
         android:layout_width="0dp"

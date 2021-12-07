@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/background">
+        <shape android:shape="line">
+            <stroke
+                android:width="3dp"
+                android:color="#FFDDAA"
+                android:dashWidth="20dp"
+                android:dashGap="7dp" />
+        </shape>
+    </item>
+
+    <item android:id="@+id/progress">
+        <clip
+            android:clipOrientation="horizontal"
+            android:gravity="start">
+            <shape android:shape="line">
+                <stroke
+                    android:width="3dp"
+                    android:color="#2299FF"
+                    android:dashWidth="21dp"
+                    android:dashGap="7dp" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>
