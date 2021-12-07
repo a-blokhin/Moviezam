@@ -229,15 +229,15 @@ class ShazamFragment : BaseFragment(){
         super.onStart()
         //раскоментировать это и нажимать на значок лупы второй сверху строки поиска
         binding.favouriteFab.setOnClickListener {
-            mListener.onListFragmentInteraction(0, FavouriteFragment())
+            if (state) {
+                mListener.onListFragmentInteraction(0, FavouriteFragment())
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (state) {
                 binding.fab.setOnClickListener {
                     search()
                 }
-            }
         }
 
     }
