@@ -4,41 +4,46 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moviezam.App
 import com.example.moviezam.databinding.ItemArtistBinding
 import com.example.moviezam.databinding.ItemFilmBinding
-import com.example.moviezam.databinding.ItemSongBinding
 import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.models.FilmCard
-import com.example.moviezam.models.SongCard
+import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment
 import com.example.moviezam.views.ui.FilmFragment
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteractionListener,
-                      private var films: List<FilmCard>)
-    : RecyclerView.Adapter<FilmCardAdapter.FilmCardViewHolder>() {
+class FilmSearchAdapter(private var mListener: BaseFragment.OnListFragmentInteractionListener)
+    : PagingDataAdapter<FilmCard, FilmSearchAdapter.FilmSearchViewHolder>(REPO_COMPARATOR) {
 
+    companion object {
+        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<FilmCard>() {
+            override fun areItemsTheSame(oldItem: FilmCard, newItem: FilmCard): Boolean =
+                oldItem == newItem
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmCardViewHolder {
-        val binding = ItemFilmBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return FilmCardViewHolder(binding, mListener)
+            override fun areContentsTheSame(oldItem: FilmCard, newItem: FilmCard): Boolean =
+                oldItem == newItem
+        }
     }
 
-    fun setData(films: List<FilmCard>) {
-        this.films = films
-        notifyDataSetChanged()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmSearchViewHolder {
+        val binding = ItemFilmBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FilmSearchViewHolder(binding, mListener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: FilmCardViewHolder, position: Int) {
-        holder.bind(films!![position])
+    override fun onBindViewHolder(holder: FilmSearchViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
     }
 
-    override fun getItemCount() = if (films != null) films!!.size else 0
-
-    class FilmCardViewHolder(
+    class FilmSearchViewHolder(
         private val binding: ItemFilmBinding,
         private var mListener: BaseFragment.OnListFragmentInteractionListener
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -56,6 +61,11 @@ class FilmCardAdapter(private var mListener: BaseFragment.OnListFragmentInteract
             binding.releaseDate.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
             binding.releaseDate.isSelected = true
             binding.itemFilm.setOnClickListener{
+                runBlocking {
+                    launch {
+                        App().searchRepo?.insertFilm(film)
+                    }
+                }
                 mListener.onListFragmentInteraction(film.id, FilmFragment())
             }
         }

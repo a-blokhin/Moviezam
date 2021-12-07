@@ -25,18 +25,6 @@ class ArtistViewModel {
         }
     }
 
-    suspend fun loadArtistsByPrefix(prefix: String, pageNum: Int): MutableList<ArtistCard> {
-        job?.cancel()
-        var artistsPerPage: List<ArtistCard> = emptyList()
-
-        job = CoroutineScope(Dispatchers.IO).launch {
-            artistsPerPage = repo.getArtistsByName(prefix, pageNum)
-        }
-        job!!.join()
-
-        return artistsPerPage.toMutableList()
-    }
-
     suspend fun getFavourite(id: Int, context: Context?): FavouriteEntity? {
         favJob?.cancel()
         var fav : FavouriteEntity? = null

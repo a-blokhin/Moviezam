@@ -7,4 +7,6 @@
     <string name="search">Search</string>
     <string name="similar">Similar</string>
     <string name="favorites">Favorites</string>
+    <string name="retry">Произошла трагическая ошибка</string>
+    <string name="searchHistory">Search history</string>
 </resources>

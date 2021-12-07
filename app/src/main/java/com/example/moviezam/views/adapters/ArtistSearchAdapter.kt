@@ -4,6 +4,8 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviezam.App
 import com.example.moviezam.databinding.ItemArtistBinding
@@ -13,31 +15,31 @@ import com.example.moviezam.views.ui.BaseFragment
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+class ArtistSearchAdapter(
+    private var mListener: BaseFragment.OnListFragmentInteractionListener
+) : PagingDataAdapter<ArtistCard, ArtistSearchAdapter.ArtistSearchViewHolder>(REPO_COMPARATOR) {
 
-class ArtistCardAdapter(
-    private var mListener: BaseFragment.OnListFragmentInteractionListener,
-    private var artists: List<ArtistCard>
-) : RecyclerView.Adapter<ArtistCardAdapter.ArtistCardViewHolder>() {
+    companion object {
+        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<ArtistCard>() {
+            override fun areItemsTheSame(oldItem: ArtistCard, newItem: ArtistCard): Boolean =
+                oldItem == newItem
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistCardViewHolder {
-        val binding = ItemArtistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ArtistCardViewHolder(binding, mListener)
+            override fun areContentsTheSame(oldItem: ArtistCard, newItem: ArtistCard): Boolean =
+                oldItem == newItem
+        }
     }
 
-    fun setData(artists: List<ArtistCard>) {
-        this.artists = artists
-        notifyDataSetChanged()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistSearchViewHolder {
+        val binding = ItemArtistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ArtistSearchViewHolder(binding, mListener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: ArtistCardViewHolder, position: Int) {
-        holder.bind(artists[position])
+    override fun onBindViewHolder(holder: ArtistSearchViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
     }
 
-    override fun getItemCount() = artists.size
-
-    class ArtistCardViewHolder(
+    class ArtistSearchViewHolder(
         private val binding: ItemArtistBinding,
         private var mListener: BaseFragment.OnListFragmentInteractionListener
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -52,6 +54,11 @@ class ArtistCardAdapter(
                 binding.avatarImage.setImageURI(artist.image)
             }
             binding.itemArtist.setOnClickListener {
+                runBlocking {
+                    launch {
+                        App().searchRepo?.insertArtist(artist)
+                    }
+                }
                 mListener.onListFragmentInteraction(artist.id, ArtistFragment())
             }
         }

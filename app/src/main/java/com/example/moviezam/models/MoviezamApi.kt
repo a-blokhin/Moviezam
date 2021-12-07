@@ -1,6 +1,7 @@
 package com.example.moviezam.models
 
 import com.example.moviezam.repository.ArtistRepository
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -15,10 +16,20 @@ interface MoviezamApi {
         @Query("id") id: Int
     ): Response<Artist>
 
+    @GET("/artist")
+    fun getArtistCardById(
+        @Query("id") id: Int
+    ): Call<ArtistCard>
+
     @GET("/film")
     suspend fun getFilmById(
         @Query("id") id: Int
     ): Response<Film>
+
+    @GET("/film")
+    fun getFilmCardById(
+        @Query("id") id: Int
+    ): Call<FilmCard>
 
     @GET("/song")
     suspend fun getSongById(
