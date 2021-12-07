@@ -3,8 +3,7 @@ package com.example.moviezam.views.ui
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
+import android.os.*
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import com.example.moviezam.databinding.FragmentShazamBinding
 import com.example.moviezam.models.Store
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ShazamViewModel
-import com.example.moviezam.views.adapters.SongCardAdapter
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
@@ -27,13 +25,9 @@ class ShazamFragment : BaseFragment(){
     private val viewModel = ShazamViewModel()
     private var song_name: String? = null
     var state = true
-    private var songCardAdapter: SongCardAdapter? = null
     private lateinit var mListener: OnListFragmentInteractionListener
     private val binding get() = _binding!!
     private val repo = SongRepository()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +42,7 @@ class ShazamFragment : BaseFragment(){
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
+                if ((query != null) && state) {
                     Store.id = -2
                     Store.shazam = query
                     mListener.onListFragmentInteraction(-2, SearchFragment())
@@ -122,6 +116,61 @@ class ShazamFragment : BaseFragment(){
             }
         }
     }
+    /*    private fun handleVolume(volume: Int) {
+            val scale = min(8.0, volume / MAX_RECORD_AMPLITUDE + 1.0).toFloat()
+            //Log.d("Scale", "Scale = $scale")
+
+            binding.volumeButton.animate()
+                .scaleX(scale)
+                .scaleY(scale)
+                .setInterpolator(interpolator)
+                .duration = VOLUME_UPDATE_DURATION
+        }
+        private companion object {
+            private const val MAX_RECORD_AMPLITUDE = 32768.0
+            private const val VOLUME_UPDATE_DURATION = 100L
+            private val interpolator = OvershootInterpolator()
+        }
+
+        fun drawVolume(output: String){
+            val handler = Handler(Looper.getMainLooper())
+            val fileSize = 88
+            var progressStatus = -1
+            //var mediaRecorder: MediaRecorder? = null
+            var mediaRecorder = MediaRecorder().apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                setOutputFile(output.dropLast(4)+"2.wav")}
+            val runnable = java.lang.Runnable {
+                binding.volumeButton.visibility = View.VISIBLE
+                while (progressStatus < fileSize) {
+
+                    //val volume =
+                    //Log.d("volume", "Volume = $volume")
+
+                    val scale = min(8.0, (mediaRecorder?.maxAmplitude?.div(MAX_RECORD_AMPLITUDE) ?: 0.0) + 1.0).toFloat()
+                    handler.post {binding.volumeButton.animate()
+                        .scaleX(scale)
+
+                        //.setInterpolator(interpolator)
+                        //.duration = VOLUME_UPDATE_DURATION
+                    }
+                    progressStatus += 1
+                    Thread.sleep(170)
+                }
+                handler.post {
+                    binding.volumeButton.visibility = View.GONE}
+                mediaRecorder.stop()
+                mediaRecorder.reset()
+                mediaRecorder.release()
+            }
+            mediaRecorder.prepare()
+            mediaRecorder.start()
+            Thread(runnable).start()
+
+
+        }*/
     fun search() {
         val recordAudioPermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO))
         val writePermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -139,12 +188,11 @@ class ShazamFragment : BaseFragment(){
             if (state) {
                 drawprogresss()
                 state = false
-                val output = requireActivity().externalCacheDir?.absolutePath + "/soundrecorder/recording.wav"
-                val dir = requireActivity().externalCacheDir?.absolutePath + "/soundrecorder/"
+                val output = requireActivity().externalCacheDir?.absolutePath + "/recording.wav"
                 lifecycleScope.launch {
                     //Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG).show()
                     song_name = withContext(Dispatchers.Default) {
-                        return@withContext viewModel.findSong(output.toString(), dir.toString())
+                        return@withContext viewModel.findSong(output)
                     }
                     /*val f = File(dir+"shazam.txt")
                     if (!f.exists()) {

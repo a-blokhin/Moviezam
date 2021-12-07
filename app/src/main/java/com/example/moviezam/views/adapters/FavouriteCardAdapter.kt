@@ -45,7 +45,15 @@ class FavouriteCardAdapter(
         fun bind(favourite: FavouriteEntity) {
             binding.favouriteName.text = favourite.name
             binding.favouriteName.isSelected = true
-            binding.avatarImage.setImageURI(favourite.img)
+            if (favourite.img == "" || favourite.img == null) {
+                when (favourite.type) {
+                    "film" -> binding.avatarImage.setImageURI("https://images.unsplash.com/photo-1535016120720-40c646be5580?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80")
+                    "song" -> binding.avatarImage.setImageURI("https://image.shutterstock.com/image-vector/music-icon-symbol-simple-design-260nw-1934430458.jpg")
+                    "artist" -> binding.avatarImage.setImageURI("https://contractdynamics.com/wp-content/uploads/music-bckg.jpg")
+                }
+            } else {
+                binding.avatarImage.setImageURI(favourite.img)
+            }
 
             binding.itemArtist.setOnClickListener {
                 when (favourite.type) {

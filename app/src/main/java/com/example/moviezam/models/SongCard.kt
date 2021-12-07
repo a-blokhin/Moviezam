@@ -22,5 +22,8 @@ data class SongCard(
     val album: String,
     @ColumnInfo(name = "external_art_url")
     @SerializedName("external_art_url")
-    val image: String
+    val image: String,
+    @ColumnInfo(name = "description")
+    @SerializedName("description")
+    val description: String
 )

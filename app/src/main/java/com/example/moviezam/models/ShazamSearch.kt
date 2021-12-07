@@ -15,7 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
-import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -34,16 +33,8 @@ class ShazamSearch {
 
     private var mediaRecorder: WavAudioRecorder? = null
 
-    suspend fun record(output: String, dir: String) {
+    suspend fun record(output: String) {
 
-        try {
-            // create a File object for the parent directory
-            val recorderDirectory = File(dir)
-            // have the object build the directory structure, if needed.
-            recorderDirectory.mkdirs()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
         mediaRecorder = WavAudioRecorder.getInstanse()
         mediaRecorder?.setOutputFile(output)
         Log.d("MediaRecorder", mediaRecorder!!.getState().toString())
@@ -64,9 +55,9 @@ class ShazamSearch {
 
     @SuppressLint("RestrictedApi")
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun search(output: String, dir: String): String {
+    suspend fun search(output: String): String {
 
-        record(output, dir)
+        record(output)
 
         val encoded = Files.readAllBytes(Paths.get(output))
 

@@ -22,18 +22,6 @@
         android:queryBackground="@android:color/transparent"
         android:queryHint="Search" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:progressDrawable = "@drawable/circular_progressbar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="208dp"
-        android:layout_height="208dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        />
     <TextView
         android:id="@+id/annotationBase"
         android:layout_width="match_parent"
@@ -50,6 +38,7 @@
         android:translationZ="90dp"
         android:text="Распознавание и поиск"
         android:visibility="gone"/>
+
     <TextView
         android:id="@+id/annotationNotRecognized"
         android:layout_width="match_parent"
@@ -66,6 +55,7 @@
         android:translationZ="90dp"
         android:text="Песня не распознана"
         android:visibility="gone"/>
+
     <TextView
         android:id="@+id/annotationRecord"
         android:layout_width="match_parent"
@@ -83,6 +73,7 @@
         android:text="Запись"
         android:visibility="gone"
         />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/favourite_fab"
         android:layout_width="wrap_content"
@@ -91,7 +82,9 @@
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/star100" />
+        app:srcCompat="@drawable/star100"
+        app:backgroundTint="#ffc500"/>
+
     <TextView
         android:id="@+id/annotationNotInBase"
         android:layout_width="match_parent"
@@ -109,6 +102,7 @@
         android:text="Пеcня в базе саундтреков не найдена"
         android:visibility="gone"
         />
+
     <ProgressBar
         android:id="@+id/progressShaz"
         style="?android:attr/progressBarStyle"
@@ -118,6 +112,33 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone"
+        />
+
+    <View
+        android:id="@+id/volumeButton"
+        android:layout_width="208dp"
+        android:layout_height="208dp"
+        android:background="@drawable/volume_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+
+        android:visibility="gone"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:progressDrawable = "@drawable/circular_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="208dp"
+        android:layout_height="208dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"
         />
 
