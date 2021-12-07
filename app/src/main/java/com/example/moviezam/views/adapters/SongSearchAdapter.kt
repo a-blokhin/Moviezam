@@ -52,6 +52,7 @@ class SongSearchAdapter(
             binding.itemSong.setOnClickListener{
                 runBlocking {
                     launch {
+                        song.time = System.currentTimeMillis().toString()
                         App().searchRepo?.insertSong(song)
                     }
                 }

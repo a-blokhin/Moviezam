@@ -8,21 +8,21 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SearchDao {
-    @Query("SELECT * FROM artist_table")
+    @Query("SELECT * FROM artist_table ORDER BY insert_time")
     fun getArtists(): List<ArtistCard>
 
-    @Query("SELECT * FROM film_table")
+    @Query("SELECT * FROM film_table ORDER BY insert_time")
     fun getFilms(): List<FilmCard>
 
-    @Query("SELECT * FROM song_table")
+    @Query("SELECT * FROM song_table ORDER BY insert_time")
     fun getSongs(): List<SongCard>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(artistCard: ArtistCard) : Long
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(filmCard: FilmCard) : Long
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(songCard: SongCard) : Long
 }
