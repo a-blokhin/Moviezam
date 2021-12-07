@@ -3,8 +3,8 @@ package com.example.moviezam.views.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.moviezam.R
-import com.example.moviezam.models.AppDatabase
-import com.example.moviezam.models.Store
+import com.example.moviezam.models.*
+import com.example.moviezam.repository.SearchRepository
 import com.facebook.drawee.backends.pipeline.Fresco
 
 
@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
         Fresco.initialize(this)
         setContentView(R.layout.activity_main)
         AppDatabase.getInstance(this)
+        SearchHistoryDatabase.getInstance(this)
 
         val f = ShazamFragment()
         supportFragmentManager

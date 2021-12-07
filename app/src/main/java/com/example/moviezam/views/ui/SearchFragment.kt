@@ -9,19 +9,30 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviezam.App
 import com.example.moviezam.databinding.FragmentSearchBinding
+import com.example.moviezam.models.*
+import com.example.moviezam.repository.ArtistRepository
+import com.example.moviezam.repository.FilmRepository
+import com.example.moviezam.repository.SearchRepository
+import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.SearchViewModel
 import com.example.moviezam.views.adapters.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 
 class SearchFragment: BaseFragment() {
     private var _binding : FragmentSearchBinding? = null
@@ -33,11 +44,33 @@ class SearchFragment: BaseFragment() {
     private var artistSearchAdapter: ArtistSearchAdapter? = null
     private var filmSearchAdapter: FilmSearchAdapter? = null
 
+    private var songHistoryAdapter: SongCardAdapter? = null
+    private var artistHistoryAdapter: ArtistCardAdapter? = null
+    private var filmHistoryAdapter: FilmCardAdapter? = null
+
     private var mListener: OnListFragmentInteractionListener? = null
 
     private var searchJob: Job? = null
     private var currentSearchQuery: String? = null
 
+
+    private var searchRepo = App().searchRepo
+
+    var songsHistory: List<SongCard> = searchRepo!!.songsHistory
+    var artistsHistory: List<ArtistCard> = searchRepo!!.artistsHistory
+    var filmsHistory: List<FilmCard> = searchRepo!!.filmsHistory
+
+    fun insert(songCard: SongCard) = lifecycleScope.launch {
+        searchRepo?.insertSong(songCard)
+    }
+
+    fun insert(filmCard: FilmCard) = lifecycleScope.launch {
+        searchRepo?.insertFilm(filmCard)
+    }
+
+    fun insert(artistCard: ArtistCard) = lifecycleScope.launch {
+        searchRepo?.insertArtist(artistCard)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +80,12 @@ class SearchFragment: BaseFragment() {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         setUpBasic()
         initSearch()
+
+        if (Store.id == -2) {
+            Store.id = 0
+            binding.searchView.setQuery(Store.shazam,false)
+            Store.shazam = ""
+        }
         return binding.root
     }
 
@@ -59,6 +98,9 @@ class SearchFragment: BaseFragment() {
         songSearchAdapter = SongSearchAdapter(mListener!!)
         artistSearchAdapter = ArtistSearchAdapter(mListener!!)
         filmSearchAdapter = FilmSearchAdapter(mListener!!)
+        songHistoryAdapter = SongCardAdapter(mListener!!, listOf())
+        filmHistoryAdapter = FilmCardAdapter(mListener!!, listOf())
+        artistHistoryAdapter = ArtistCardAdapter(mListener!!, listOf())
 
         binding.list.adapter = songSearchAdapter
 
@@ -105,6 +147,7 @@ class SearchFragment: BaseFragment() {
         }
     }
 
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mListener = if (context is OnListFragmentInteractionListener) {
@@ -123,12 +166,18 @@ class SearchFragment: BaseFragment() {
     private fun initSearch() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                updateList()
+                when (!query.isNullOrEmpty()) {
+                    true -> updateList()
+                    else -> updateHistory()
+                }
                 return false
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                updateList()
+                when (!p0.isNullOrEmpty()) {
+                    true -> updateList()
+                    else -> updateHistory()
+                }
                 return false
             }
         })
@@ -142,8 +191,36 @@ class SearchFragment: BaseFragment() {
 
     private fun updateList() {
         binding.searchView.query.let {
-            currentSearchQuery = it.toString()
-            search(it.toString())
+            when(it.toString().isEmpty()) {
+                true -> updateHistory()
+                else -> {
+                    currentSearchQuery = it.toString()
+                    search(it.toString())
+                }
+            }
+        }
+    }
+
+    private fun updateHistory() {
+        when(binding.buttonView.checkedRadioButtonId) {
+            binding.songButton.id -> {
+                binding.list.adapter = songHistoryAdapter
+                songsHistory = App().searchRepo!!.songsHistory
+                songHistoryAdapter?.setData(songsHistory)
+                songHistoryAdapter?.notifyDataSetChanged()
+            }
+            binding.filmButton.id -> {
+                binding.list.adapter = filmHistoryAdapter
+                filmsHistory = App().searchRepo!!.filmsHistory
+                filmHistoryAdapter?.setData(filmsHistory)
+                filmHistoryAdapter?.notifyDataSetChanged()
+            }
+            binding.artistButton.id -> {
+                binding.list.adapter = artistHistoryAdapter
+                artistsHistory = App().searchRepo!!.artistsHistory
+                artistHistoryAdapter?.setData(artistsHistory)
+                artistHistoryAdapter?.notifyDataSetChanged()
+            }
         }
     }
 

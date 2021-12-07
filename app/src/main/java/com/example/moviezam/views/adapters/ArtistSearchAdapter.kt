@@ -7,10 +7,13 @@ import androidx.annotation.RequiresApi
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moviezam.App
 import com.example.moviezam.databinding.ItemArtistBinding
 import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ArtistSearchAdapter(
     private var mListener: BaseFragment.OnListFragmentInteractionListener
@@ -51,6 +54,11 @@ class ArtistSearchAdapter(
                 binding.avatarImage.setImageURI(artist.image)
             }
             binding.itemArtist.setOnClickListener {
+                runBlocking {
+                    launch {
+                        App().searchRepo?.insertArtist(artist)
+                    }
+                }
                 mListener.onListFragmentInteraction(artist.id, ArtistFragment())
             }
         }

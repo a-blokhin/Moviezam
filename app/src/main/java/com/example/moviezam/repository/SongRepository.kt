@@ -13,12 +13,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SongRepository {
 
     suspend fun getSongById(id: Int): Response<Song> {
         return Moviezam.api.getSongById(id)
+    }
+
+    suspend fun getSongCardById(id: Int): SongCard? {
+        return Moviezam.api.getSongCardById(id).execute().body()
     }
 
     suspend fun getSongsPageByName(name: String, pageNum: Int): List<SongCard> = withContext(Dispatchers.IO) {

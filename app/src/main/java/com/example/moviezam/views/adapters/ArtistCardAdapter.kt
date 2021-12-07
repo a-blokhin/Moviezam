@@ -5,10 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moviezam.App
 import com.example.moviezam.databinding.ItemArtistBinding
 import com.example.moviezam.models.ArtistCard
 import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 
 class ArtistCardAdapter(
     private var mListener: BaseFragment.OnListFragmentInteractionListener,

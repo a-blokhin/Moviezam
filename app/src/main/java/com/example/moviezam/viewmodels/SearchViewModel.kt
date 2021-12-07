@@ -8,7 +8,7 @@ import com.example.moviezam.models.SongCard
 import com.example.moviezam.repository.ArtistRepository
 import com.example.moviezam.repository.FilmRepository
 import com.example.moviezam.repository.SongRepository
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 
 class SearchViewModel() : ViewModel() {
     private var songRepo = SongRepository()
@@ -22,6 +22,7 @@ class SearchViewModel() : ViewModel() {
     private var currentSongSearchResult: Flow<PagingData<SongCard>>? = null
     private var currentArtistSearchResult: Flow<PagingData<ArtistCard>>? = null
     private var currentFilmSearchResult: Flow<PagingData<FilmCard>>? = null
+
 
     fun searchSongs(query: String): Flow<PagingData<SongCard>> {
         val lastResult = currentSongSearchResult

@@ -3,12 +3,15 @@ package com.example.moviezam.views.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moviezam.App
 import com.example.moviezam.databinding.ItemSongBinding
 import com.example.moviezam.models.Artist
 import com.example.moviezam.models.SongCard
 import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment.OnListFragmentInteractionListener
 import com.example.moviezam.views.ui.SongFragment
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class SongCardAdapter(private var mListener: OnListFragmentInteractionListener, private var songs: List<SongCard>) : RecyclerView.Adapter<SongCardAdapter.SongCardViewHolder>() {

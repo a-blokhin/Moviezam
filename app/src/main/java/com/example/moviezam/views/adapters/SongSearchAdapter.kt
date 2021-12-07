@@ -5,10 +5,13 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moviezam.App
 import com.example.moviezam.databinding.ItemSongBinding
 import com.example.moviezam.models.SongCard
 import com.example.moviezam.views.ui.BaseFragment
 import com.example.moviezam.views.ui.SongFragment
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class SongSearchAdapter(
     private var mListener: BaseFragment.OnListFragmentInteractionListener
@@ -47,6 +50,11 @@ class SongSearchAdapter(
                 binding.avatarImage.setImageURI(song.image)
             }
             binding.itemSong.setOnClickListener{
+                runBlocking {
+                    launch {
+                        App().searchRepo?.insertSong(song)
+                    }
+                }
                 mListener.onListFragmentInteraction(song.id, SongFragment())
             }
         }

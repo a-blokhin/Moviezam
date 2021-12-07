@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 class FilmViewModel {
 
     private val repo = FilmRepository()
-    private var job: Job? = null
 
     fun loadFilm(id: Int) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
@@ -22,17 +21,5 @@ class FilmViewModel {
         } else {
             emit(Resource.error(null))
         }
-    }
-
-    suspend fun loadFilmsByPrefix(prefix: String, pageNum: Int): MutableList<FilmCard> {
-        job?.cancel()
-        var filmsPerPage: List<FilmCard> = emptyList()
-
-        job = CoroutineScope(Dispatchers.IO).launch {
-            filmsPerPage = repo.getFilmsPageByName(prefix, pageNum)
-        }
-        job!!.join()
-
-        return filmsPerPage.toMutableList()
     }
 }

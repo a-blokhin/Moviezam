@@ -17,8 +17,12 @@ class FilmRepository {
         return Moviezam.api.getFilmById(id)
     }
 
-    suspend fun getFilmsByName(name: String, page: Int): List<FilmCard> = withContext(Dispatchers.IO) {
-        return@withContext Moviezam.api.getFilmsByName(name, page).execute().body()
+    suspend fun getFilmCardById(id: Int): FilmCard? {
+        return Moviezam.api.getFilmCardById(id).execute().body()
+    }
+
+    suspend fun getFilmsPageByName(name: String, pageNum: Int): List<FilmCard> = withContext(Dispatchers.IO) {
+        return@withContext Moviezam.api.getFilmsByName(name, pageNum).execute().body()
             ?: emptyList()
     }
 

@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moviezam.App
 import com.example.moviezam.databinding.ItemArtistBinding
 import com.example.moviezam.databinding.ItemFilmBinding
 import com.example.moviezam.models.ArtistCard
@@ -14,6 +15,8 @@ import com.example.moviezam.models.FilmCard
 import com.example.moviezam.views.ui.ArtistFragment
 import com.example.moviezam.views.ui.BaseFragment
 import com.example.moviezam.views.ui.FilmFragment
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -58,6 +61,11 @@ class FilmSearchAdapter(private var mListener: BaseFragment.OnListFragmentIntera
             binding.releaseDate.text = LocalDate.parse(film?.releaseDate?.substringBefore(' ')).format(formatter)
             binding.releaseDate.isSelected = true
             binding.itemFilm.setOnClickListener{
+                runBlocking {
+                    launch {
+                        App().searchRepo?.insertFilm(film)
+                    }
+                }
                 mListener.onListFragmentInteraction(film.id, FilmFragment())
             }
         }
