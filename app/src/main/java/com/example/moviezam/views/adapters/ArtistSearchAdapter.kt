@@ -56,6 +56,7 @@ class ArtistSearchAdapter(
             binding.itemArtist.setOnClickListener {
                 runBlocking {
                     launch {
+                        artist.time = System.currentTimeMillis().toString()
                         App().searchRepo?.insertArtist(artist)
                     }
                 }

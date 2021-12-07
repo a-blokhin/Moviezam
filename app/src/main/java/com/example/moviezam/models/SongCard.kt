@@ -25,5 +25,7 @@ data class SongCard(
     val image: String,
     @ColumnInfo(name = "description")
     @SerializedName("description")
-    val description: String
+    val description: String,
+    @ColumnInfo(name = "insert_time")
+    var time: String
 )

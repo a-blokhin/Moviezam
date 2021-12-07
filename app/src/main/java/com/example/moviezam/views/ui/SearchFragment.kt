@@ -205,19 +205,19 @@ class SearchFragment: BaseFragment() {
         when(binding.buttonView.checkedRadioButtonId) {
             binding.songButton.id -> {
                 binding.list.adapter = songHistoryAdapter
-                songsHistory = App().searchRepo!!.songsHistory
+                songsHistory = App().searchRepo!!.songsHistory.sortedByDescending { it.time }
                 songHistoryAdapter?.setData(songsHistory)
                 songHistoryAdapter?.notifyDataSetChanged()
             }
             binding.filmButton.id -> {
                 binding.list.adapter = filmHistoryAdapter
-                filmsHistory = App().searchRepo!!.filmsHistory
+                filmsHistory = App().searchRepo!!.filmsHistory.sortedByDescending { it.time }
                 filmHistoryAdapter?.setData(filmsHistory)
                 filmHistoryAdapter?.notifyDataSetChanged()
             }
             binding.artistButton.id -> {
                 binding.list.adapter = artistHistoryAdapter
-                artistsHistory = App().searchRepo!!.artistsHistory
+                artistsHistory = App().searchRepo!!.artistsHistory.sortedByDescending { it.time }
                 artistHistoryAdapter?.setData(artistsHistory)
                 artistHistoryAdapter?.notifyDataSetChanged()
             }

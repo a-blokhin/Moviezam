@@ -63,6 +63,7 @@ class FilmSearchAdapter(private var mListener: BaseFragment.OnListFragmentIntera
             binding.itemFilm.setOnClickListener{
                 runBlocking {
                     launch {
+                        film.time = System.currentTimeMillis().toString()
                         App().searchRepo?.insertFilm(film)
                     }
                 }

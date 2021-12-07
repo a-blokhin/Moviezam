@@ -16,5 +16,7 @@ data class ArtistCard(
     val name: String,
     @ColumnInfo(name = "image")
     @SerializedName("image")
-    val image: String
+    val image: String,
+    @ColumnInfo(name = "insert_time")
+    var time: String
 )
