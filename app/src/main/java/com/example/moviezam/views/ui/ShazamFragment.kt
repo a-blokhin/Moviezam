@@ -115,7 +115,7 @@ class ShazamFragment : BaseFragment(){
                 while (progressStatus < fileSize) {
                     progressStatus += 1
                     delay(100)
-                    val scale = ((mediaRecorder?.maxAmplitude?.div(32768.0) ?: 0.0).toFloat()*10.0-2.0)
+                    val scale = ((mediaRecorder?.maxAmplitude?.div(32768.0) ?: 0.0).toFloat()-0.09)*50.0
                     // This thread runs in the UI
                     Log.d("volume", "scale = $scale")
                     binding.progressBar.progress = progressStatus
