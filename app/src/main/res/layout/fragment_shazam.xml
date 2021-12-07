@@ -115,19 +115,6 @@
         android:visibility="gone"
         />
 
-    <View
-        android:id="@+id/volumeButton"
-        android:layout_width="208dp"
-        android:layout_height="208dp"
-        android:background="@drawable/volume_view"
-        app:layout_constraintBottom_toBottomOf="parent"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-
-        android:visibility="gone"
-        />
 
     <ProgressBar
         android:id="@+id/progressBar"

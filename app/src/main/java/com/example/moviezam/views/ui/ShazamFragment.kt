@@ -102,7 +102,7 @@ class ShazamFragment : BaseFragment(){
                 binding.annotationRecord.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.VISIBLE
                 binding.progressVolume.visibility = View.VISIBLE
-                binding.progressVolume.max = 8
+                binding.progressVolume.max = 32
                 binding.progressBar.max = fileSize
                 var progressStatus = -1
                 var mediaRecorder = MediaRecorder().apply {
@@ -115,7 +115,7 @@ class ShazamFragment : BaseFragment(){
                 while (progressStatus < fileSize) {
                     progressStatus += 1
                     delay(100)
-                    val scale = ((mediaRecorder?.maxAmplitude?.div(32768.0) ?: 0.0).toFloat())*50.0
+                    val scale = ((mediaRecorder?.maxAmplitude?.div(32768.0) ?: 0.0).toFloat())*200.0
                     // This thread runs in the UI
                     Log.d("volume", "scale = $scale")
                     binding.progressBar.progress = progressStatus
