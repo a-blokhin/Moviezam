@@ -1,6 +1,8 @@
 package com.example.moviezam.views.ui
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +41,8 @@ class SongFragment : BaseFragment() {
                     Resource.Status.SUCCESS -> {
                         resource.data?.let { song ->
                             setUpBasic(song)
-                            songSaved = song}
+                            songSaved = song
+                        }
                     }
                     Resource.Status.ERROR -> {
                         Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
@@ -74,9 +77,10 @@ class SongFragment : BaseFragment() {
     ): View {
         _binding = FragmentSongBinding.inflate(inflater, container, false)
 
-        binding.films.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+        binding.films.layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
-        filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>() )
+        filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>())
 
         binding.films.adapter = filmsAdapter
 
@@ -98,8 +102,12 @@ class SongFragment : BaseFragment() {
         binding.songImg.setImageURI(song.externalArtUrl)
         binding.songTitle.text = song.name
         binding.songTitle.isSelected = true
-        binding.songDesc.text = if (song.albumName != "") song.artist.plus(" - ").plus(song.albumName) else song.artist
+        binding.songDesc.text =
+            if (song.albumName != "") song.artist.plus(" - ").plus(song.albumName) else song.artist
         binding.songDesc.isSelected = true
+        binding.spotify.setOnClickListener {
+            goToUrl("https://open.spotify.com/search/" + java.net.URLEncoder.encode(song.name, "utf-8"))
+        }
         filmsAdapter!!.setData(song.films)
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -139,6 +147,12 @@ class SongFragment : BaseFragment() {
             }
         }
 
+    }
+
+    private fun goToUrl(url: String) {
+        val uriUrl: Uri = Uri.parse(url)
+        val launchBrowser = Intent(Intent.ACTION_VIEW, uriUrl)
+        startActivity(launchBrowser)
     }
 
     override fun onDestroyView() {

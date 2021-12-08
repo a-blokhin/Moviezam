@@ -44,41 +44,69 @@
                 android:paddingTop="24dp"
                 android:paddingEnd="24dp"
                 android:paddingBottom="24dp"
+                android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/song_img">
 
-                <TextView
-                    android:id="@+id/song_title"
+                <LinearLayout
+                    android:id="@+id/ly"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="@id/black_song_rec"
-                    tools:text="TEXT" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <TextView
+                        android:id="@+id/song_title"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="8dp"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="@id/black_song_rec"
+                        tools:text="TEXT" />
 
-                <TextView
-                    android:id="@+id/song_desc"
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/spotify"
+                        style="@style/Icons"
+                        fresco:placeholderImage="@drawable/spotify" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ly2"
                     android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/song_title"
-                    tools:text="TEXT" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/ly">
+                    <TextView
+                        android:id="@+id/song_desc"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="TEXT" />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/spotify2"
+                        style="@style/Icons"
+                        android:visibility="invisible"
+                        fresco:placeholderImage="@drawable/spotify" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
