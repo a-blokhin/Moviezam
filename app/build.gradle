@@ -105,4 +105,13 @@ dependencies {
     implementation "androidx.paging:paging-guava:$paging_version"
     implementation "androidx.paging:paging-compose:1.0.0-alpha08"
 
+
+    //navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    def nav_version = "1.0.0"
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
+    implementation 'com.google.android.material:material:<version>'
+
 }
