@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routes"
+    app:startDestination="@id/shazamFragment"
+    >
+
+<!--    <fragment-->
+<!--        android:id="@+id/navigationFragment"-->
+<!--        android:name="com.example.moviezam.views.ui.NavigationFragment"-->
+<!--        android:label="fragment_navigation"-->
+<!--        tools:layout="@layout/fragment_navigation" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_navigationFragment_to_shazamFragment"-->
+<!--            app:destination="@id/shazamFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_navigationFragment_to_searchFragment"-->
+<!--            app:destination="@id/searchFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_navigationFragment_to_favouriteFragment"-->
+<!--            app:destination="@id/favouriteFragment" />-->
+<!--    </fragment>-->
+
+    <fragment
+        android:id="@+id/shazamFragment"
+        android:name="com.example.moviezam.views.ui.ShazamFragment"
+        android:label="fragment_shazam"
+        tools:layout="@layout/fragment_shazam" />
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.moviezam.views.ui.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.example.moviezam.views.ui.FavouriteFragment"
+        android:label="FavouriteFragment" />
+
+</navigation>

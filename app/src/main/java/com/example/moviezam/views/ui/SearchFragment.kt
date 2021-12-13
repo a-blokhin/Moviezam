@@ -18,6 +18,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.App
+import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentSearchBinding
 import com.example.moviezam.models.*
 import com.example.moviezam.repository.ArtistRepository
@@ -26,12 +27,14 @@ import com.example.moviezam.repository.SearchRepository
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.SearchViewModel
 import com.example.moviezam.views.adapters.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.internal.wait
 
 class SearchFragment: BaseFragment() {
@@ -78,6 +81,7 @@ class SearchFragment: BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+
         setUpBasic()
         initSearch()
 
@@ -95,6 +99,7 @@ class SearchFragment: BaseFragment() {
     }
 
     private fun setUpBasic()  {
+
         songSearchAdapter = SongSearchAdapter(mListener!!)
         artistSearchAdapter = ArtistSearchAdapter(mListener!!)
         filmSearchAdapter = FilmSearchAdapter(mListener!!)
@@ -109,8 +114,41 @@ class SearchFragment: BaseFragment() {
 
         for (adapter in listOf(songSearchAdapter, artistSearchAdapter, filmSearchAdapter)) {
             (adapter as PagingDataAdapter<*, *>).addLoadStateListener { loadState ->
+
+                val songItemShimmer = binding.songItemShimmer
+                songItemShimmer.setVisibility(View.GONE);
+                val artistItemShimmer = binding.artistItemShimmer
+                artistItemShimmer.setVisibility(View.GONE);
+                val filmItemShimmer = binding.filmItemShimmer
+                filmItemShimmer.setVisibility(View.GONE);
+
+                when (adapter) {
+                    is SongSearchAdapter -> {
+                        songItemShimmer.setVisibility(View.VISIBLE);
+                        songItemShimmer.startShimmer();
+                    }
+                    artistSearchAdapter -> {
+                        artistItemShimmer.setVisibility(View.VISIBLE);
+                        artistItemShimmer.startShimmer();
+                    }
+                    filmSearchAdapter -> {
+                        filmItemShimmer.setVisibility(View.VISIBLE);
+                        filmItemShimmer.startShimmer();
+                    }
+                }
+
                 binding.list.isVisible = loadState.source.refresh is LoadState.NotLoading
-                binding.progressBarRepoSearch.isVisible = loadState.source.refresh is LoadState.Loading
+//                binding.progressBarRepoSearch.isVisible = loadState.source.refresh is LoadState.Loading
+                binding.progressBarRepoSearch.isVisible = false
+
+                if (loadState.source.refresh !is LoadState.Loading) {
+                    songItemShimmer.stopShimmer();
+                    songItemShimmer.setVisibility(View.GONE);
+                    artistItemShimmer.stopShimmer();
+                    artistItemShimmer.setVisibility(View.GONE);
+                    filmItemShimmer.stopShimmer();
+                    filmItemShimmer.setVisibility(View.GONE);
+                }
 
                 val errorState = loadState.source.append as? LoadState.Error
                     ?: loadState.source.prepend as? LoadState.Error
@@ -229,10 +267,20 @@ class SearchFragment: BaseFragment() {
         searchJob = lifecycleScope.launch {
             when(binding.buttonView.checkedRadioButtonId) {
                 binding.songButton.id -> {
+
+//                    var songItemShimmer = binding.songItemShimmer
+//                    songItemShimmer.visibility = View.VISIBLE
+//                    songItemShimmer.startShimmer();
+
                     searchViewModel.searchSongs(query).collectLatest {
                         binding.list.adapter = songSearchAdapter
                         songSearchAdapter?.submitData(it)
                     }
+
+//                    withContext(Dispatchers.Main) {
+//                        songItemShimmer.stopShimmer();
+//                        songItemShimmer.setVisibility(View.GONE);
+//                    }
                 }
                 binding.filmButton.id -> {
                     searchViewModel.searchFilms(query).collectLatest {

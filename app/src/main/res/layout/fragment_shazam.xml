@@ -83,7 +83,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/star100"
-        app:backgroundTint="#ffc500"/>
+        app:backgroundTint="#ffc500"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/annotationNotInBase"

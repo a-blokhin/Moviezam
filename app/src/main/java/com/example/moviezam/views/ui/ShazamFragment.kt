@@ -11,13 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentShazamBinding
 import com.example.moviezam.models.Store
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.ShazamViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
@@ -38,6 +41,32 @@ class ShazamFragment : BaseFragment(){
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShazamBinding.inflate(inflater, container, false)
+
+        binding.searchView.visibility = View.GONE
+
+        val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
+
+        navView.setOnNavigationItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.shazamFragment -> {
+                    mListener?.onListFragmentInteraction(-1, ShazamFragment())
+                    true
+                }
+
+                R.id.searchFragment -> {
+                    mListener?.onListFragmentInteraction(-1, SearchFragment())
+                    true
+                }
+
+                R.id.favouriteFragment -> {
+                    mListener?.onListFragmentInteraction(0, FavouriteFragment())
+                    true
+                }
+
+                else ->  true
+            }
+        }
+
         setUpBasic()
         return binding.root
     }
@@ -227,6 +256,7 @@ class ShazamFragment : BaseFragment(){
 
     override fun onStart() {
         super.onStart()
+
         //раскоментировать это и нажимать на значок лупы второй сверху строки поиска
         binding.favouriteFab.setOnClickListener {
             if (state) {
@@ -250,6 +280,7 @@ class ShazamFragment : BaseFragment(){
                 "$context must implement OnListFragmentInteractionListener"
             )
         }
+
     }
 
     override fun onDestroyView() {
