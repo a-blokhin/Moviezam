@@ -18,6 +18,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.App
+import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentSearchBinding
 import com.example.moviezam.models.*
 import com.example.moviezam.repository.ArtistRepository
@@ -26,6 +27,7 @@ import com.example.moviezam.repository.SearchRepository
 import com.example.moviezam.repository.SongRepository
 import com.example.moviezam.viewmodels.SearchViewModel
 import com.example.moviezam.views.adapters.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -79,6 +81,7 @@ class SearchFragment: BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+
         setUpBasic()
         initSearch()
 

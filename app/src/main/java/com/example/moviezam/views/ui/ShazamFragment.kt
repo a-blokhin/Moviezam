@@ -42,6 +42,8 @@ class ShazamFragment : BaseFragment(){
     ): View {
         _binding = FragmentShazamBinding.inflate(inflater, container, false)
 
+        binding.searchView.visibility = View.GONE
+
         val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener { item ->
@@ -254,6 +256,7 @@ class ShazamFragment : BaseFragment(){
 
     override fun onStart() {
         super.onStart()
+
         //раскоментировать это и нажимать на значок лупы второй сверху строки поиска
         binding.favouriteFab.setOnClickListener {
             if (state) {
@@ -277,6 +280,7 @@ class ShazamFragment : BaseFragment(){
                 "$context must implement OnListFragmentInteractionListener"
             )
         }
+
     }
 
     override fun onDestroyView() {
