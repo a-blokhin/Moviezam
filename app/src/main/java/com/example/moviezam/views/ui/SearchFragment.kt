@@ -90,6 +90,11 @@ class SearchFragment: BaseFragment() {
             binding.searchView.setQuery(Store.shazam,false)
             Store.shazam = ""
         }
+
+        if (Store.id == -3) {
+            Store.id = 0
+            binding.searchView.setQuery(Store.savedQuery ?: "",false)
+        }
         return binding.root
     }
 
@@ -204,6 +209,7 @@ class SearchFragment: BaseFragment() {
     private fun initSearch() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                Store.savedQuery = query
                 when (!query.isNullOrEmpty()) {
                     true -> updateList()
                     else -> updateHistory()
@@ -212,6 +218,7 @@ class SearchFragment: BaseFragment() {
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
+                Store.savedQuery = p0
                 when (!p0.isNullOrEmpty()) {
                     true -> updateList()
                     else -> updateHistory()

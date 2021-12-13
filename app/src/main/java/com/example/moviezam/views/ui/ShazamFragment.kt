@@ -54,7 +54,7 @@ class ShazamFragment : BaseFragment(){
                 }
 
                 R.id.searchFragment -> {
-                    mListener?.onListFragmentInteraction(-1, SearchFragment())
+                    mListener?.onListFragmentInteraction(-3, SearchFragment())
                     true
                 }
 

@@ -4,5 +4,6 @@ class Store {
     companion object {
         var id: Int = 0
         var shazam: String? = null
+        var savedQuery: String? = null
     }
 }
