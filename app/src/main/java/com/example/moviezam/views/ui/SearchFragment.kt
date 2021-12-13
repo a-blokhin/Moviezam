@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.internal.wait
 
 class SearchFragment: BaseFragment() {
@@ -95,6 +96,7 @@ class SearchFragment: BaseFragment() {
     }
 
     private fun setUpBasic()  {
+
         songSearchAdapter = SongSearchAdapter(mListener!!)
         artistSearchAdapter = ArtistSearchAdapter(mListener!!)
         filmSearchAdapter = FilmSearchAdapter(mListener!!)
@@ -109,8 +111,41 @@ class SearchFragment: BaseFragment() {
 
         for (adapter in listOf(songSearchAdapter, artistSearchAdapter, filmSearchAdapter)) {
             (adapter as PagingDataAdapter<*, *>).addLoadStateListener { loadState ->
+
+                val songItemShimmer = binding.songItemShimmer
+                songItemShimmer.setVisibility(View.GONE);
+                val artistItemShimmer = binding.artistItemShimmer
+                artistItemShimmer.setVisibility(View.GONE);
+                val filmItemShimmer = binding.filmItemShimmer
+                filmItemShimmer.setVisibility(View.GONE);
+
+                when (adapter) {
+                    is SongSearchAdapter -> {
+                        songItemShimmer.setVisibility(View.VISIBLE);
+                        songItemShimmer.startShimmer();
+                    }
+                    artistSearchAdapter -> {
+                        artistItemShimmer.setVisibility(View.VISIBLE);
+                        artistItemShimmer.startShimmer();
+                    }
+                    filmSearchAdapter -> {
+                        filmItemShimmer.setVisibility(View.VISIBLE);
+                        filmItemShimmer.startShimmer();
+                    }
+                }
+
                 binding.list.isVisible = loadState.source.refresh is LoadState.NotLoading
-                binding.progressBarRepoSearch.isVisible = loadState.source.refresh is LoadState.Loading
+//                binding.progressBarRepoSearch.isVisible = loadState.source.refresh is LoadState.Loading
+                binding.progressBarRepoSearch.isVisible = false
+
+                if (loadState.source.refresh !is LoadState.Loading) {
+                    songItemShimmer.stopShimmer();
+                    songItemShimmer.setVisibility(View.GONE);
+                    artistItemShimmer.stopShimmer();
+                    artistItemShimmer.setVisibility(View.GONE);
+                    filmItemShimmer.stopShimmer();
+                    filmItemShimmer.setVisibility(View.GONE);
+                }
 
                 val errorState = loadState.source.append as? LoadState.Error
                     ?: loadState.source.prepend as? LoadState.Error
@@ -229,10 +264,20 @@ class SearchFragment: BaseFragment() {
         searchJob = lifecycleScope.launch {
             when(binding.buttonView.checkedRadioButtonId) {
                 binding.songButton.id -> {
+
+//                    var songItemShimmer = binding.songItemShimmer
+//                    songItemShimmer.visibility = View.VISIBLE
+//                    songItemShimmer.startShimmer();
+
                     searchViewModel.searchSongs(query).collectLatest {
                         binding.list.adapter = songSearchAdapter
                         songSearchAdapter?.submitData(it)
                     }
+
+//                    withContext(Dispatchers.Main) {
+//                        songItemShimmer.stopShimmer();
+//                        songItemShimmer.setVisibility(View.GONE);
+//                    }
                 }
                 binding.filmButton.id -> {
                     searchViewModel.searchFilms(query).collectLatest {

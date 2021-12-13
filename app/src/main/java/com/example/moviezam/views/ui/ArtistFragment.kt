@@ -72,6 +72,10 @@ class ArtistFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
+
+        var songItemShimmer = binding.songItemShimmer
+        songItemShimmer.startShimmer();
+
         binding.songs.layoutManager =
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         adapter = SongCardAdapter(mListener, listOf())
@@ -92,6 +96,12 @@ class ArtistFragment : BaseFragment() {
     }
 
     private fun setUpBasic(artist: Artist) {
+
+        var songItemShimmer = binding.songItemShimmer
+
+        songItemShimmer.stopShimmer();
+        songItemShimmer.setVisibility(View.GONE);
+
         binding.image.setImageURI(artist.image)
         binding.artistName.text = artist.name
         adapter!!.setData(artist.songs)

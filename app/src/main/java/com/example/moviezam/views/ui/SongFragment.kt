@@ -74,6 +74,9 @@ class SongFragment : BaseFragment() {
     ): View {
         _binding = FragmentSongBinding.inflate(inflater, container, false)
 
+        var filmItemShimmer = binding.filmItemShimmer
+        filmItemShimmer.startShimmer();
+
         binding.films.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
 
         filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>() )
@@ -95,6 +98,12 @@ class SongFragment : BaseFragment() {
     }
 
     private fun setUpBasic(song: Song) {
+
+        var filmItemShimmer = binding.filmItemShimmer
+
+        filmItemShimmer.stopShimmer();
+        filmItemShimmer.setVisibility(View.GONE);
+
         binding.songImg.setImageURI(song.externalArtUrl)
         binding.songTitle.text = song.name
         binding.songTitle.isSelected = true

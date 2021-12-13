@@ -114,4 +114,7 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
     implementation 'com.google.android.material:material:<version>'
 
+    //shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
 }

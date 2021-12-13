@@ -84,6 +84,9 @@ class FilmFragment : BaseFragment() {
     ): View {
         _binding = FragmentFilmBinding.inflate(inflater, container, false)
 
+        var songItemShimmer = binding.songItemShimmer
+        songItemShimmer.startShimmer();
+
         songsAdapter = SongCardAdapter(mListener, listOf<SongCard>())
         artistsAdapter = ArtistCardAdapter(mListener, listOf<ArtistCard>())
         filmsAdapter = FilmCardAdapter(mListener, listOf<FilmCard>())
@@ -123,6 +126,12 @@ class FilmFragment : BaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpBasic(film: Film) {
+
+        var songItemShimmer = binding.songItemShimmer
+
+        songItemShimmer.stopShimmer();
+        songItemShimmer.setVisibility(View.GONE);
+
         binding.filmImg.setImageURI(film.image)
         binding.filmTitle.text = film.name
         binding.filmTitle.isSelected = true
