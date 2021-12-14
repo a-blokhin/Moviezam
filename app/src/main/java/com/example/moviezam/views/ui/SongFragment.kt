@@ -15,6 +15,7 @@ import com.example.moviezam.databinding.FragmentSongBinding
 import com.example.moviezam.models.*
 import com.example.moviezam.viewmodels.SongViewModel
 import com.example.moviezam.views.adapters.FilmCardAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -77,6 +78,9 @@ class SongFragment : BaseFragment() {
     ): View {
         _binding = FragmentSongBinding.inflate(inflater, container, false)
 
+        val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
+        navView.menu.getItem(1).isChecked = true
+
         var filmItemShimmer = binding.filmItemShimmer
         filmItemShimmer.startShimmer();
 
@@ -107,6 +111,10 @@ class SongFragment : BaseFragment() {
 
         filmItemShimmer.stopShimmer();
         filmItemShimmer.setVisibility(View.GONE);
+
+        if (Store.id == -1) {
+            binding.filmsSection.visibility = View.GONE
+        }
 
         binding.songImg.setImageURI(song.externalArtUrl)
         binding.songTitle.text = song.name

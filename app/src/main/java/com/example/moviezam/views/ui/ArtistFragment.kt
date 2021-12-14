@@ -15,6 +15,7 @@ import com.example.moviezam.views.adapters.SongCardAdapter
 import java.lang.RuntimeException
 import com.example.moviezam.R
 import com.example.moviezam.models.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,6 +73,9 @@ class ArtistFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentArtistBinding.inflate(inflater, container, false)
+
+        val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
+        navView.menu.getItem(1).isChecked = true
 
         var songItemShimmer = binding.songItemShimmer
         songItemShimmer.startShimmer();

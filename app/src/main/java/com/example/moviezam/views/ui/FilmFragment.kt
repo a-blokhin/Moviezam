@@ -17,6 +17,7 @@ import com.example.moviezam.viewmodels.FilmViewModel
 import com.example.moviezam.views.adapters.ArtistCardAdapter
 import com.example.moviezam.views.adapters.FilmCardAdapter
 import com.example.moviezam.views.adapters.SongCardAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.lang.RuntimeException
@@ -83,6 +84,9 @@ class FilmFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFilmBinding.inflate(inflater, container, false)
+
+        val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
+        navView.menu.getItem(1).isChecked = true
 
         var songItemShimmer = binding.songItemShimmer
         songItemShimmer.startShimmer();

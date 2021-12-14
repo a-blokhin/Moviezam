@@ -82,6 +82,9 @@ class SearchFragment: BaseFragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
+        val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
+        navView.menu.getItem(1).isChecked = true
+
         setUpBasic()
         initSearch()
 

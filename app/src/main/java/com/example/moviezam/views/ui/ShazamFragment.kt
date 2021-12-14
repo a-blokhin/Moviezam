@@ -47,8 +47,6 @@ class ShazamFragment : BaseFragment(){
 //            val callback = Toast.makeText(context, "Its toast!", Toast.LENGTH_SHORT).show()
 //        }
 
-        binding.searchView.visibility = View.GONE
-
         val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener { item ->
