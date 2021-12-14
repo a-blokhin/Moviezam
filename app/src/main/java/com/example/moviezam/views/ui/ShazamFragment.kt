@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -42,23 +43,27 @@ class ShazamFragment : BaseFragment(){
     ): View {
         _binding = FragmentShazamBinding.inflate(inflater, container, false)
 
+//        requireActivity().onBackPressedDispatcher.addCallback(this) {
+//            val callback = Toast.makeText(context, "Its toast!", Toast.LENGTH_SHORT).show()
+//        }
+
         binding.searchView.visibility = View.GONE
 
         val navView: BottomNavigationView = (activity as MainActivity).findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
-                R.id.shazamFragment -> {
+                R.id.shazamFragmentMenu -> {
                     mListener?.onListFragmentInteraction(-1, ShazamFragment())
                     true
                 }
 
-                R.id.searchFragment -> {
+                R.id.searchFragmentMenu -> {
                     mListener?.onListFragmentInteraction(-3, SearchFragment())
                     true
                 }
 
-                R.id.favouriteFragment -> {
+                R.id.favouriteFragmentMenu -> {
                     mListener?.onListFragmentInteraction(0, FavouriteFragment())
                     true
                 }

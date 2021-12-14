@@ -3,6 +3,8 @@ package com.example.moviezam.views.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import com.example.moviezam.R
 import com.example.moviezam.models.*
 import com.example.moviezam.repository.SearchRepository
@@ -24,15 +26,6 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
         Fresco.initialize(this)
         setContentView(R.layout.activity_main)
 
-//        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-//        val navController = findNavController(R.id.nav_host_fragment)
-//        val appBarConfiguration = AppBarConfiguration(setOf(
-//            R.id.shazamFragment,
-//            R.id.searchFragment,
-//            R.id.favouriteFragment))
-////        setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController)
-
         AppDatabase.getInstance(this)
         SearchHistoryDatabase.getInstance(this)
 
@@ -51,6 +44,35 @@ class MainActivity : AppCompatActivity(), BaseFragment.OnListFragmentInteraction
             .replace(R.id.container, f)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        val prevFragment = supportFragmentManager.fragments.lastOrNull()
+
+        when (prevFragment) {
+            is ShazamFragment -> {
+                navView.menu.getItem(0).isChecked = true
+            }
+            is FavouriteFragment -> {
+                navView.menu.getItem(2).isChecked = true
+            }
+            else -> {
+                navView.menu.getItem(1).isChecked = true
+            }
+        }
+
+
+//        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+//        navView.menu.getItem(0).isChecked = true
+//        navView.setSelectedItemId(R.id.shazamFragmentMenu);
+
+//        super.onBackPressed()
+
+
     }
 }
 
