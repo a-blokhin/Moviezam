@@ -27,6 +27,10 @@ import com.google.gson.JsonParser
 import kotlinx.coroutines.*
 import java.lang.Double.min
 import java.net.UnknownHostException
+import java.lang.Compiler.enable
+
+
+
 
 class ShazamFragment : BaseFragment(){
     private var _binding: FragmentShazamBinding? = null
@@ -185,6 +189,10 @@ class ShazamFragment : BaseFragment(){
             } else {
 
                 if (state) {
+                    for (i in 0 until (activity as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view).menu.size()) {
+                        (activity as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view).menu.getItem(i).isEnabled = false
+                    }
+//                    (activity as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view).menu.iterator<Menu>().forEach { it.isEnabled = false }
                     state = false
                     val output = requireActivity().externalCacheDir?.absolutePath + "/recording.wav"
                     drawprogresss(output)
@@ -264,6 +272,10 @@ class ShazamFragment : BaseFragment(){
                             binding.annotationNotRecognized.visibility = View.GONE
                         }
                         state = true
+                        for (i in 0 until (activity as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view).menu.size()) {
+                            (activity as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view).menu.getItem(i).isEnabled = true
+                        }
+//                        (activity as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view).menu.iterator<Menu>().forEach { it.isEnabled = true }
                     }
 
                 } else {
