@@ -52,17 +52,17 @@ class ShazamFragment : BaseFragment(){
         navView.setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.shazamFragmentMenu -> {
-                    mListener?.onListFragmentInteraction(-1, ShazamFragment())
+                    mListener?.onListFragmentInteraction(Store.id, ShazamFragment())
                     true
                 }
 
                 R.id.searchFragmentMenu -> {
-                    mListener?.onListFragmentInteraction(-3, SearchFragment())
+                    mListener?.onListFragmentInteraction(Store.id, SearchFragment())
                     true
                 }
 
                 R.id.favouriteFragmentMenu -> {
-                    mListener?.onListFragmentInteraction(0, FavouriteFragment())
+                    mListener?.onListFragmentInteraction(Store.id, FavouriteFragment())
                     true
                 }
 

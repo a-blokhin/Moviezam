@@ -64,6 +64,7 @@ class SongFragment : BaseFragment() {
         if (Store.id > 0) {
             setupObservers()
         } else if (Store.id == -1) {
+            binding.like.visibility = View.GONE
             val gson = Gson()
             setUpBasic(gson.fromJson(Store.shazam.toString(), Song::class.java))
         } else {
