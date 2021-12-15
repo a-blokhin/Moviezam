@@ -169,91 +169,109 @@ class ShazamFragment : BaseFragment(){
     }
 
     fun search() {
-        val recordAudioPermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO))
-        val writePermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
-        if (recordAudioPermissionStatus != PackageManager.PERMISSION_GRANTED &&
-            writePermissionStatus != PackageManager.PERMISSION_GRANTED
-        ) {
-            val permissions = arrayOf(
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
-        } else {
-
-            if (state) {
-                state = false
-                val output = requireActivity().externalCacheDir?.absolutePath + "/recording.wav"
-                drawprogresss(output)
-                //drawVolume(output)
-                lifecycleScope.launch {
-                    //Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG).show()
-                    song_name = withContext(Dispatchers.Default) {
-                        return@withContext viewModel.findSong(output)
-                    }
-                    /*val f = File(dir+"shazam.txt")
-                    if (!f.exists()) {
-                        f.createNewFile()
-                    }
-                    f.writeText(song_name.toString(), Charset.defaultCharset())*/
-                    val convertedObject = JsonParser().parse(song_name).asJsonObject
-                    if (convertedObject.get("matches").toString().length > 2) {
-                        /*Toast.makeText(
-                            getActivity(),
-                            convertedObject.getAsJsonObject("track")["title"].asString,
-                            Toast.LENGTH_LONG
-                        ).show()*/
-
-                        Log.d(
-                            "MediaRecorderder",
-                            convertedObject.getAsJsonObject("track")["title"].asString
-                        )
-
-                        val req = convertedObject.getAsJsonObject("track")["title"].asString
-                        //val req = convertedObject.getAsJsonObject("track").getAsJsonObject("urlparams")["{tracktitle}"].asString.lowercase()
-
-                        Log.d(
-                            "MediaRecorderder", req
-                        )
-                        var songsPerPage = repo.getSongsPageByName(req, 1)
-                        binding.annotationBase.visibility = View.GONE
-                        binding.progressShaz.visibility = View.GONE
-                        if (songsPerPage.size > 0){
-                            Store.id = songsPerPage[0].id
-                            mListener.onListFragmentInteraction(songsPerPage[0].id, SongFragment())
-                        } else{
-                            binding.annotationNotInBase.visibility = View.VISIBLE
-                            delay(2000)
-                            Store.id = -1
-                            var songJson = generateJson(convertedObject).toString().dropLast(3)+"[]}"
-                            Store.shazam = songJson
-                            //Toast.makeText(getActivity(), "песни нету в беке", Toast.LENGTH_SHORT).show()
-                            Log.d(
-                                "MediaRecorderder", "песни нету в беке"
-                            )
-                            Log.d(
-                                "MediaRecorderder", songJson.toString()
-                            )
-                            binding.annotationNotInBase.visibility = View.GONE
-                            mListener.onListFragmentInteraction(-1, SongFragment())
-                        }
-
-
-
-                    } else {
-                        binding.annotationBase.visibility = View.GONE
-                        binding.progressShaz.visibility = View.GONE
-                        binding.annotationNotRecognized.visibility = View.VISIBLE
-                        delay(1500)
-                        binding.annotationNotRecognized.visibility = View.GONE
-                    }
-                    state = true
-                }
-
+        try {
+            val recordAudioPermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO))
+            val writePermissionStatus = (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            if (recordAudioPermissionStatus != PackageManager.PERMISSION_GRANTED &&
+                writePermissionStatus != PackageManager.PERMISSION_GRANTED
+            ) {
+                val permissions = arrayOf(
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+                ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
             } else {
-                Log.d("MediaRecorderder", "MediaRecorderder is working")
+
+                if (state) {
+                    state = false
+                    val output = requireActivity().externalCacheDir?.absolutePath + "/recording.wav"
+                    drawprogresss(output)
+                    //drawVolume(output)
+                    lifecycleScope.launch {
+                        //Toast.makeText(getActivity(), "Запись 4.5 секунды пошла", Toast.LENGTH_LONG).show()
+
+                        try {
+                            song_name = withContext(Dispatchers.Default) {
+                                return@withContext viewModel.findSong(output)
+                            }
+                        } catch (e: Exception) {
+                            delay(500)
+                            binding.annotationBase.visibility = View.GONE
+                            binding.progressShaz.visibility = View.GONE
+
+                            state = true
+                            Toast.makeText(context, "Problems with Internet connection", Toast.LENGTH_SHORT).show()
+                            return@launch
+                        }
+                        /*val f = File(dir+"shazam.txt")
+                        if (!f.exists()) {
+                            f.createNewFile()
+                        }
+                        f.writeText(song_name.toString(), Charset.defaultCharset())*/
+                        val convertedObject = JsonParser().parse(song_name).asJsonObject
+                        if (convertedObject.get("matches").toString().length > 2) {
+                            /*Toast.makeText(
+                                getActivity(),
+                                convertedObject.getAsJsonObject("track")["title"].asString,
+                                Toast.LENGTH_LONG
+                            ).show()*/
+
+                            Log.d(
+                                "MediaRecorderder",
+                                convertedObject.getAsJsonObject("track")["title"].asString
+                            )
+
+                            val req = convertedObject.getAsJsonObject("track")["title"].asString
+                            //val req = convertedObject.getAsJsonObject("track").getAsJsonObject("urlparams")["{tracktitle}"].asString.lowercase()
+
+                            Log.d(
+                                "MediaRecorderder", req
+                            )
+                            var songsPerPage = repo.getSongsPageByName(req, 1)
+                            binding.annotationBase.visibility = View.GONE
+                            binding.progressShaz.visibility = View.GONE
+                            if (songsPerPage.size > 0){
+                                Store.id = songsPerPage[0].id
+                                mListener.onListFragmentInteraction(songsPerPage[0].id, SongFragment())
+                            } else{
+                                binding.annotationNotInBase.visibility = View.VISIBLE
+                                delay(2000)
+                                Store.id = -1
+                                var songJson = generateJson(convertedObject).toString().dropLast(3)+"[]}"
+                                Store.shazam = songJson
+                                //Toast.makeText(getActivity(), "песни нету в беке", Toast.LENGTH_SHORT).show()
+                                Log.d(
+                                    "MediaRecorderder", "песни нету в беке"
+                                )
+                                Log.d(
+                                    "MediaRecorderder", songJson.toString()
+                                )
+                                binding.annotationNotInBase.visibility = View.GONE
+                                mListener.onListFragmentInteraction(-1, SongFragment())
+                            }
+
+
+
+                        } else {
+                            binding.annotationBase.visibility = View.GONE
+                            binding.progressShaz.visibility = View.GONE
+                            binding.annotationNotRecognized.visibility = View.VISIBLE
+                            delay(1500)
+                            binding.annotationNotRecognized.visibility = View.GONE
+                        }
+                        state = true
+                    }
+
+                } else {
+                    Log.d("MediaRecorderder", "MediaRecorderder is working")
+                }
             }
+        } catch(e: Exception) {
+            state = true
+            binding.annotationBase.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(context, "Problems with Internet connection", Toast.LENGTH_SHORT).show()
         }
     }
 

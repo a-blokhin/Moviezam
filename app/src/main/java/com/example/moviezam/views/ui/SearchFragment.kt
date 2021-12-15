@@ -9,10 +9,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -20,22 +17,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviezam.App
 import com.example.moviezam.R
 import com.example.moviezam.databinding.FragmentSearchBinding
-import com.example.moviezam.models.*
-import com.example.moviezam.repository.ArtistRepository
-import com.example.moviezam.repository.FilmRepository
-import com.example.moviezam.repository.SearchRepository
-import com.example.moviezam.repository.SongRepository
+import com.example.moviezam.models.ArtistCard
+import com.example.moviezam.models.FilmCard
+import com.example.moviezam.models.SongCard
+import com.example.moviezam.models.Store
 import com.example.moviezam.viewmodels.SearchViewModel
 import com.example.moviezam.views.adapters.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 
 class SearchFragment: BaseFragment() {
     private var _binding : FragmentSearchBinding? = null
@@ -59,9 +52,9 @@ class SearchFragment: BaseFragment() {
 
     private var searchRepo = App().searchRepo
 
-    var songsHistory: List<SongCard> = searchRepo!!.songsHistory
-    var artistsHistory: List<ArtistCard> = searchRepo!!.artistsHistory
-    var filmsHistory: List<FilmCard> = searchRepo!!.filmsHistory
+    private var songsHistory: List<SongCard> = searchRepo!!.songsHistory
+    private var artistsHistory: List<ArtistCard> = searchRepo!!.artistsHistory
+    private var filmsHistory: List<FilmCard> = searchRepo!!.filmsHistory
 
     fun insert(songCard: SongCard) = lifecycleScope.launch {
         searchRepo?.insertSong(songCard)
@@ -124,24 +117,24 @@ class SearchFragment: BaseFragment() {
             (adapter as PagingDataAdapter<*, *>).addLoadStateListener { loadState ->
 
                 val songItemShimmer = binding.songItemShimmer
-                songItemShimmer.setVisibility(View.GONE);
+                songItemShimmer.setVisibility(View.GONE)
                 val artistItemShimmer = binding.artistItemShimmer
-                artistItemShimmer.setVisibility(View.GONE);
+                artistItemShimmer.setVisibility(View.GONE)
                 val filmItemShimmer = binding.filmItemShimmer
-                filmItemShimmer.setVisibility(View.GONE);
+                filmItemShimmer.setVisibility(View.GONE)
 
                 when (adapter) {
                     is SongSearchAdapter -> {
-                        songItemShimmer.setVisibility(View.VISIBLE);
-                        songItemShimmer.startShimmer();
+                        songItemShimmer.setVisibility(View.VISIBLE)
+                        songItemShimmer.startShimmer()
                     }
                     artistSearchAdapter -> {
-                        artistItemShimmer.setVisibility(View.VISIBLE);
-                        artistItemShimmer.startShimmer();
+                        artistItemShimmer.setVisibility(View.VISIBLE)
+                        artistItemShimmer.startShimmer()
                     }
                     filmSearchAdapter -> {
-                        filmItemShimmer.setVisibility(View.VISIBLE);
-                        filmItemShimmer.startShimmer();
+                        filmItemShimmer.setVisibility(View.VISIBLE)
+                        filmItemShimmer.startShimmer()
                     }
                 }
 
@@ -150,12 +143,12 @@ class SearchFragment: BaseFragment() {
                 binding.progressBarRepoSearch.isVisible = false
 
                 if (loadState.source.refresh !is LoadState.Loading) {
-                    songItemShimmer.stopShimmer();
-                    songItemShimmer.setVisibility(View.GONE);
-                    artistItemShimmer.stopShimmer();
-                    artistItemShimmer.setVisibility(View.GONE);
-                    filmItemShimmer.stopShimmer();
-                    filmItemShimmer.setVisibility(View.GONE);
+                    songItemShimmer.stopShimmer()
+                    songItemShimmer.setVisibility(View.GONE)
+                    artistItemShimmer.stopShimmer()
+                    artistItemShimmer.setVisibility(View.GONE)
+                    filmItemShimmer.stopShimmer()
+                    filmItemShimmer.setVisibility(View.GONE)
                 }
 
                 val errorState = loadState.source.append as? LoadState.Error

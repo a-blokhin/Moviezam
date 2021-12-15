@@ -46,7 +46,7 @@ class ArtistCardAdapter(
         fun bind(artist: ArtistCard) {
             binding.artistName.text = artist.name
             binding.artistName.isSelected = true
-            if (artist.image == "" || artist.image == null) {
+            if (artist.image == "") {
                 binding.avatarImage.setImageURI("https://contractdynamics.com/wp-content/uploads/music-bckg.jpg")
             } else {
                 binding.avatarImage.setImageURI(artist.image)
