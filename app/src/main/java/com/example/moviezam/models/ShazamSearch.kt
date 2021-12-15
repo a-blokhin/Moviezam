@@ -26,7 +26,7 @@ class ShazamSearch {
         @Headers(
             "content-type: text/plain",
             "x-rapidapi-host: shazam.p.rapidapi.com",
-            "x-rapidapi-key: 499ccd8ae9mshcca85b2e34a22a6p1cff90jsnaf15cc689700"
+            "x-rapidapi-key: 59a8429e11msh93251c2d858a96ep114b40jsnfb035a647df7"
         )
         suspend fun ShazamRequest(@Body requestBody: RequestBody): Response<ResponseBody>
     }
