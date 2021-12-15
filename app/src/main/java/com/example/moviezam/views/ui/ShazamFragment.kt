@@ -26,6 +26,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
 import java.lang.Double.min
+import java.net.UnknownHostException
 
 class ShazamFragment : BaseFragment(){
     private var _binding: FragmentShazamBinding? = null
@@ -195,7 +196,7 @@ class ShazamFragment : BaseFragment(){
                             song_name = withContext(Dispatchers.Default) {
                                 return@withContext viewModel.findSong(output)
                             }
-                        } catch (e: Exception) {
+                        } catch (e: UnknownHostException) {
                             delay(1000)
                             binding.annotationBase.visibility = View.GONE
                             binding.progressShaz.visibility = View.GONE
