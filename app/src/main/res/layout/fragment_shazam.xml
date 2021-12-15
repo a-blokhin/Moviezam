@@ -40,6 +40,23 @@
         android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/annotationNoInternet"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:fadingEdge="horizontal"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="180dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:translationZ="90dp"
+        android:text="No internet connection"
+        android:visibility="gone"/>
+
+    <TextView
         android:id="@+id/annotationNotRecognized"
         android:layout_width="match_parent"
         android:layout_height="40dp"

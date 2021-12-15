@@ -196,12 +196,14 @@ class ShazamFragment : BaseFragment(){
                                 return@withContext viewModel.findSong(output)
                             }
                         } catch (e: Exception) {
-                            delay(500)
+                            delay(1000)
                             binding.annotationBase.visibility = View.GONE
                             binding.progressShaz.visibility = View.GONE
+                            binding.annotationNoInternet.visibility = View.VISIBLE
+                            delay(2000)
+                            binding.annotationNoInternet.visibility = View.GONE
 
                             state = true
-                            Toast.makeText(context, "Problems with Internet connection", Toast.LENGTH_SHORT).show()
                             return@launch
                         }
                         /*val f = File(dir+"shazam.txt")
